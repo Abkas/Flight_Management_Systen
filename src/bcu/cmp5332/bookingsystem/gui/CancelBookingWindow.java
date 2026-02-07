@@ -10,7 +10,7 @@ import javax.swing.*;
 public class CancelBookingWindow extends JFrame implements ActionListener {
 
     private MainWindow mw;
-    private JTextField customerIdText = new JTextField();
+    private JComboBox<Customer> customerCombo;
     private JButton loadBookingsBtn = new JButton("Load Customer Bookings");
     private JPanel bookingsListPanel = new JPanel();
     private JButton confirmCancelBtn = new JButton("Cancel Selected Booking");
@@ -30,10 +30,24 @@ public class CancelBookingWindow extends JFrame implements ActionListener {
         setSize(500, 500);
         setLayout(new BorderLayout(10, 10));
 
+        FlightBookingSystem fbs = mw.getFlightBookingSystem();
+        java.util.List<Customer> customers = fbs.getCustomers();
+        customerCombo = new JComboBox<>(customers.toArray(new Customer[0]));
+        customerCombo.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                if (value instanceof Customer) {
+                    Customer c = (Customer) value;
+                    value = c.getId() + " - " + c.getName();
+                }
+                return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+            }
+        });
+
         JPanel topPanel = new JPanel(new GridLayout(2, 2, 5, 5));
         topPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-        topPanel.add(new JLabel("Enter Customer ID:"));
-        topPanel.add(customerIdText);
+        topPanel.add(new JLabel("Customer:"));
+        topPanel.add(customerCombo);
         topPanel.add(new JLabel(""));
         topPanel.add(loadBookingsBtn);
 
@@ -83,25 +97,22 @@ public class CancelBookingWindow extends JFrame implements ActionListener {
     }
 
     private void loadBookings() {
-        try {
-            int customerId = Integer.parseInt(customerIdText.getText());
-            selectedCustomer = mw.getFlightBookingSystem().getCustomerByID(customerId);
-            
-            listModel.clear();
-            List<Booking> bookings = selectedCustomer.getBookings();
-            if (bookings.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "This customer has no active bookings.", "Notice", JOptionPane.INFORMATION_MESSAGE);
-                confirmCancelBtn.setEnabled(false);
-            } else {
-                for (Booking b : bookings) {
-                    listModel.addElement(b);
-                }
-                confirmCancelBtn.setEnabled(true);
+        selectedCustomer = (Customer) customerCombo.getSelectedItem();
+        if (selectedCustomer == null) {
+            JOptionPane.showMessageDialog(this, "Please select a customer.", "Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        listModel.clear();
+        List<Booking> bookings = selectedCustomer.getBookings();
+        if (bookings.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "This customer has no active bookings.", "Notice", JOptionPane.INFORMATION_MESSAGE);
+            confirmCancelBtn.setEnabled(false);
+        } else {
+            for (Booking b : bookings) {
+                listModel.addElement(b);
             }
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Please enter a valid Customer ID", "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (FlightBookingSystemException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            confirmCancelBtn.setEnabled(true);
         }
     }
 

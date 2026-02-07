@@ -4,7 +4,10 @@ import bcu.cmp5332.bookingsystem.commands.AddFlight;
 import bcu.cmp5332.bookingsystem.commands.Command;
 import bcu.cmp5332.bookingsystem.main.FlightBookingSystemException;
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
@@ -15,7 +18,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 
 public class AddFlightWindow extends JFrame implements ActionListener {
@@ -25,9 +30,13 @@ public class AddFlightWindow extends JFrame implements ActionListener {
     private JTextField originText = new JTextField();
     private JTextField destinationText = new JTextField();
     private JTextField depDateText = new JTextField();
-    private JTextField economySeatsText = new JTextField();
-    private JTextField businessSeatsText = new JTextField();
-    private JTextField firstSeatsText = new JTextField();
+
+    private JTextField firstRowsText = new JTextField();
+    private JTextField firstColsText = new JTextField();
+    private JTextField businessRowsText = new JTextField();
+    private JTextField businessColsText = new JTextField();
+    private JTextField economyRowsText = new JTextField();
+    private JTextField economyColsText = new JTextField();
 
     private JButton addBtn = new JButton("Add");
     private JButton cancelBtn = new JButton("Cancel");
@@ -43,37 +52,121 @@ public class AddFlightWindow extends JFrame implements ActionListener {
         } catch (Exception ex) {
         }
 
-        setTitle("Add a New Flight");
-        setSize(450, 320);
-        JPanel topPanel = new JPanel();
-        topPanel.setLayout(new GridLayout(7, 2, 10, 10));
-        
-        topPanel.add(new JLabel("Flight No:"));
-        topPanel.add(flightNoText);
-        topPanel.add(new JLabel("Origin:"));
-        topPanel.add(originText);
-        topPanel.add(new JLabel("Destination:"));
-        topPanel.add(destinationText);
-        topPanel.add(new JLabel("Departure Date (YYYY-MM-DD):"));
-        topPanel.add(depDateText);
-        topPanel.add(new JLabel("Economy seats:"));
-        topPanel.add(economySeatsText);
-        topPanel.add(new JLabel("Business seats:"));
-        topPanel.add(businessSeatsText);
-        topPanel.add(new JLabel("First class seats:"));
-        topPanel.add(firstSeatsText);
+        setTitle("Add New Flight");
+        setSize(500, 360);
+
+        JPanel contentPanel = new JPanel(new BorderLayout(10, 10));
+
+        JLabel titleLabel = new JLabel("Add New Flight", SwingConstants.CENTER);
+        titleLabel.setFont(titleLabel.getFont().deriveFont(18f));
+        contentPanel.add(titleLabel, BorderLayout.NORTH);
+
+        JPanel formPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(6, 10, 6, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridy = 0;
+
+        JLabel flightNoLabel = new JLabel("Flight No:", SwingConstants.RIGHT);
+        JLabel originLabel = new JLabel("Origin:", SwingConstants.RIGHT);
+        JLabel destinationLabel = new JLabel("Destination:", SwingConstants.RIGHT);
+        JLabel dateLabel = new JLabel("Departure Date (YYYY-MM-DD):", SwingConstants.RIGHT);
+
+        flightNoText.setPreferredSize(new Dimension(220, 26));
+        originText.setPreferredSize(new Dimension(220, 26));
+        destinationText.setPreferredSize(new Dimension(220, 26));
+        depDateText.setPreferredSize(new Dimension(220, 26));
+
+        gbc.gridx = 0;
+        formPanel.add(flightNoLabel, gbc);
+        gbc.gridx = 1;
+        formPanel.add(flightNoText, gbc);
+
+        gbc.gridy++;
+        gbc.gridx = 0;
+        formPanel.add(originLabel, gbc);
+        gbc.gridx = 1;
+        formPanel.add(originText, gbc);
+
+        gbc.gridy++;
+        gbc.gridx = 0;
+        formPanel.add(destinationLabel, gbc);
+        gbc.gridx = 1;
+        formPanel.add(destinationText, gbc);
+
+        gbc.gridy++;
+        gbc.gridx = 0;
+        formPanel.add(dateLabel, gbc);
+        gbc.gridx = 1;
+        formPanel.add(depDateText, gbc);
+
+        // Seat configuration section
+        gbc.gridy++;
+        gbc.gridx = 0;
+        gbc.gridwidth = 2;
+        JLabel seatConfigLabel = new JLabel("Seat Configuration", SwingConstants.CENTER);
+        seatConfigLabel.setFont(seatConfigLabel.getFont().deriveFont(16f));
+        formPanel.add(seatConfigLabel, gbc);
+
+        gbc.gridwidth = 1;
+
+        firstRowsText.setPreferredSize(new Dimension(60, 26));
+        firstColsText.setPreferredSize(new Dimension(60, 26));
+        businessRowsText.setPreferredSize(new Dimension(60, 26));
+        businessColsText.setPreferredSize(new Dimension(60, 26));
+        economyRowsText.setPreferredSize(new Dimension(60, 26));
+        economyColsText.setPreferredSize(new Dimension(60, 26));
+
+        gbc.gridy++;
+        gbc.gridx = 0;
+        formPanel.add(new JLabel("FIRST: rows, columns", SwingConstants.RIGHT), gbc);
+        JPanel firstPanel = new JPanel();
+        firstPanel.add(new JLabel("Rows:"));
+        firstPanel.add(firstRowsText);
+        firstPanel.add(new JLabel("Cols:"));
+        firstPanel.add(firstColsText);
+        gbc.gridx = 1;
+        formPanel.add(firstPanel, gbc);
+
+        gbc.gridy++;
+        gbc.gridx = 0;
+        formPanel.add(new JLabel("BUSINESS: rows, columns", SwingConstants.RIGHT), gbc);
+        JPanel businessPanel = new JPanel();
+        businessPanel.add(new JLabel("Rows:"));
+        businessPanel.add(businessRowsText);
+        businessPanel.add(new JLabel("Cols:"));
+        businessPanel.add(businessColsText);
+        gbc.gridx = 1;
+        formPanel.add(businessPanel, gbc);
+
+        gbc.gridy++;
+        gbc.gridx = 0;
+        formPanel.add(new JLabel("ECONOMY: rows, columns", SwingConstants.RIGHT), gbc);
+        JPanel economyPanel = new JPanel();
+        economyPanel.add(new JLabel("Rows:"));
+        economyPanel.add(economyRowsText);
+        economyPanel.add(new JLabel("Cols:"));
+        economyPanel.add(economyColsText);
+        gbc.gridx = 1;
+        formPanel.add(economyPanel, gbc);
 
         JPanel bottomPanel = new JPanel();
-        bottomPanel.setLayout(new GridLayout(1, 3));
-        bottomPanel.add(new JLabel("     "));
+        addBtn.setPreferredSize(new Dimension(110, 32));
+        cancelBtn.setPreferredSize(new Dimension(110, 32));
         bottomPanel.add(addBtn);
         bottomPanel.add(cancelBtn);
 
         addBtn.addActionListener(this);
         cancelBtn.addActionListener(this);
 
-        this.getContentPane().add(topPanel, BorderLayout.CENTER);
-        this.getContentPane().add(bottomPanel, BorderLayout.SOUTH);
+        JScrollPane scrollPane = new JScrollPane(formPanel);
+        scrollPane.setBorder(null);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(12);
+
+        contentPanel.add(scrollPane, BorderLayout.CENTER);
+        contentPanel.add(bottomPanel, BorderLayout.SOUTH);
+
+        this.getContentPane().add(contentPanel, BorderLayout.CENTER);
         setLocationRelativeTo(mw);
         setVisible(true);
     }
@@ -98,18 +191,21 @@ public class AddFlightWindow extends JFrame implements ActionListener {
             } catch (DateTimeParseException dtpe) {
                 throw new FlightBookingSystemException("Date must be in YYYY-MM-DD format");
             }
-            int ecoSeats = Integer.parseInt(economySeatsText.getText());
-            int busSeats = Integer.parseInt(businessSeatsText.getText());
-            int firstSeats = Integer.parseInt(firstSeatsText.getText());
+            
+            int firstRows = Integer.parseInt(firstRowsText.getText());
+            int firstCols = Integer.parseInt(firstColsText.getText());
+            int busRows = Integer.parseInt(businessRowsText.getText());
+            int busCols = Integer.parseInt(businessColsText.getText());
+            int ecoRows = Integer.parseInt(economyRowsText.getText());
+            int ecoCols = Integer.parseInt(economyColsText.getText());
 
-            if (ecoSeats < 0 || busSeats < 0 || firstSeats < 0) {
-                throw new FlightBookingSystemException("Seat numbers cannot be negative.");
+            if (firstRows < 0 || firstCols < 0 || busRows < 0 || busCols < 0 || ecoRows < 0 || ecoCols < 0) {
+                throw new FlightBookingSystemException("Row and column counts cannot be negative.");
             }
 
-            int ecoCols = 6, busCols = 4, firstCols = 4;
-            int ecoRows = (ecoSeats + ecoCols - 1) / ecoCols;
-            int busRows = (busSeats + busCols - 1) / busCols;
-            int firstRows = (firstSeats + firstCols - 1) / firstCols;
+            if (firstRows * firstCols == 0 && busRows * busCols == 0 && ecoRows * ecoCols == 0) {
+                throw new FlightBookingSystemException("At least one class must have seats.");
+            }
             
             Command addFlight = new AddFlight(flightNumber, origin, destination, departureDate,
                                              ecoRows, ecoCols, busRows, busCols, firstRows, firstCols);
@@ -122,7 +218,7 @@ public class AddFlightWindow extends JFrame implements ActionListener {
         } catch (FlightBookingSystemException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Please enter valid numbers for seats in each class", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please enter valid numbers for rows and columns", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

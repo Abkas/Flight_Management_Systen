@@ -7,6 +7,8 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.border.EmptyBorder;
 
 public class BookingsPanel extends JPanel {
@@ -69,13 +71,26 @@ public class BookingsPanel extends JPanel {
         
         JTable table = new JTable(data, columns);
         table.setFont(new Font("Arial", Font.PLAIN, 14));
-        table.setRowHeight(30);
-        table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
-        table.getTableHeader().setBackground(new Color(230, 126, 34));
-        table.getTableHeader().setForeground(Color.WHITE);
-        table.setSelectionBackground(new Color(230, 126, 34, 100));
-        
+        table.setRowHeight(28);
+        table.setFillsViewportHeight(true);
+        table.setAutoCreateRowSorter(true);
+        table.setGridColor(new Color(210, 210, 210));
+        table.setShowVerticalLines(false);
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+        table.setDefaultRenderer(Object.class, centerRenderer);
+
+        JTableHeader header = table.getTableHeader();
+        header.setFont(new Font("Arial", Font.BOLD, 14));
+        header.setBackground(new Color(235, 235, 235));
+        header.setForeground(Color.BLACK);
+        header.setReorderingAllowed(false);
+        header.setPreferredSize(new Dimension(0, 30));
+
         JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setColumnHeaderView(header);
         scrollPane.setBorder(BorderFactory.createLineBorder(new Color(220, 220, 220)));
         
         add(headerPanel, BorderLayout.NORTH);

@@ -4,7 +4,10 @@ import bcu.cmp5332.bookingsystem.commands.AddCustomer;
 import bcu.cmp5332.bookingsystem.commands.Command;
 import bcu.cmp5332.bookingsystem.main.FlightBookingSystemException;
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -14,6 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 
 public class AddCustomerWindow extends JFrame implements ActionListener {
@@ -39,34 +43,75 @@ public class AddCustomerWindow extends JFrame implements ActionListener {
         } catch (Exception ex) {
         }
 
-        setTitle("Add a New Customer");
-        setSize(400, 300);
-        
-        JPanel topPanel = new JPanel();
-        topPanel.setLayout(new GridLayout(5, 2, 5, 5));
-        
-        topPanel.add(new JLabel("Name : "));
-        topPanel.add(nameText);
-        topPanel.add(new JLabel("Phone : "));
-        topPanel.add(phoneText);
-        topPanel.add(new JLabel("Gender (optional) : "));
-        topPanel.add(genderText);
-        topPanel.add(new JLabel("Age (optional) : "));
-        topPanel.add(ageText);
-        topPanel.add(new JLabel("Email (optional) : "));
-        topPanel.add(emailText);
+        setTitle("Add New Customer");
+        setSize(450, 320);
+
+        JPanel contentPanel = new JPanel(new BorderLayout(10, 10));
+
+        JLabel titleLabel = new JLabel("Add New Customer", SwingConstants.CENTER);
+        titleLabel.setFont(titleLabel.getFont().deriveFont(18f));
+        contentPanel.add(titleLabel, BorderLayout.NORTH);
+
+        JPanel formPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(6, 10, 6, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridy = 0;
+
+        JLabel nameLabel = new JLabel("Name:", SwingConstants.RIGHT);
+        JLabel phoneLabel = new JLabel("Phone:", SwingConstants.RIGHT);
+        JLabel genderLabel = new JLabel("Gender (optional):", SwingConstants.RIGHT);
+        JLabel ageLabel = new JLabel("Age (optional):", SwingConstants.RIGHT);
+        JLabel emailLabel = new JLabel("Email (optional):", SwingConstants.RIGHT);
+
+        nameText.setPreferredSize(new Dimension(220, 26));
+        phoneText.setPreferredSize(new Dimension(220, 26));
+        genderText.setPreferredSize(new Dimension(220, 26));
+        ageText.setPreferredSize(new Dimension(220, 26));
+        emailText.setPreferredSize(new Dimension(220, 26));
+
+        gbc.gridx = 0;
+        formPanel.add(nameLabel, gbc);
+        gbc.gridx = 1;
+        formPanel.add(nameText, gbc);
+
+        gbc.gridy++;
+        gbc.gridx = 0;
+        formPanel.add(phoneLabel, gbc);
+        gbc.gridx = 1;
+        formPanel.add(phoneText, gbc);
+
+        gbc.gridy++;
+        gbc.gridx = 0;
+        formPanel.add(genderLabel, gbc);
+        gbc.gridx = 1;
+        formPanel.add(genderText, gbc);
+
+        gbc.gridy++;
+        gbc.gridx = 0;
+        formPanel.add(ageLabel, gbc);
+        gbc.gridx = 1;
+        formPanel.add(ageText, gbc);
+
+        gbc.gridy++;
+        gbc.gridx = 0;
+        formPanel.add(emailLabel, gbc);
+        gbc.gridx = 1;
+        formPanel.add(emailText, gbc);
 
         JPanel bottomPanel = new JPanel();
-        bottomPanel.setLayout(new GridLayout(1, 3));
-        bottomPanel.add(new JLabel("     "));
+        addBtn.setPreferredSize(new Dimension(110, 32));
+        cancelBtn.setPreferredSize(new Dimension(110, 32));
         bottomPanel.add(addBtn);
         bottomPanel.add(cancelBtn);
 
         addBtn.addActionListener(this);
         cancelBtn.addActionListener(this);
 
-        this.getContentPane().add(topPanel, BorderLayout.CENTER);
-        this.getContentPane().add(bottomPanel, BorderLayout.SOUTH);
+        contentPanel.add(formPanel, BorderLayout.CENTER);
+        contentPanel.add(bottomPanel, BorderLayout.SOUTH);
+
+        this.getContentPane().add(contentPanel, BorderLayout.CENTER);
         setLocationRelativeTo(mw);
 
         setVisible(true);
