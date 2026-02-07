@@ -7,16 +7,17 @@ public class Booking {
     private Customer customer;
     private Flight flight;
     private LocalDate bookingDate;
-    
+    private BookingClass bookingClass;
+    private String seatNumber;
 
-    public Booking(Customer customer, Flight flight, LocalDate bookingDate) {
-        // TODO: implementation here
+    public Booking(Customer customer, Flight flight, LocalDate bookingDate, BookingClass bookingClass, String seatNumber) {
         this.customer = customer;
         this.flight = flight;
         this.bookingDate = bookingDate;
+        this.bookingClass = bookingClass;
+        this.seatNumber = seatNumber;
     }
     
-    // TODO: implementation of Getter and Setter methods
     public Customer getCustomer(){
         return customer;
     }
@@ -41,4 +42,24 @@ public class Booking {
         this.bookingDate = bookingDate;
     }
 
+    // Check cancellation - if logic changes to soft delete later
+    public boolean isCancelled() {
+        return false; 
+    }
+
+    public String getSeatNumber() {
+        return seatNumber;
+    }
+
+    public void setSeatNumber(String seatNumber) {
+        this.seatNumber = seatNumber;
+    }
+
+    public BookingClass getBookingClass() {
+        return bookingClass;
+    }
+
+    public void setBookingClass(BookingClass bookingClass) {
+        this.bookingClass = bookingClass;
+    }
 }

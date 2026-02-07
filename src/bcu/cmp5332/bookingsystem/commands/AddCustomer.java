@@ -8,18 +8,27 @@ public class AddCustomer implements Command {
 
     private final String name;
     private final String phone;
+    private final String gender;
+    private final int age;
+    private final String email;
 
-    public AddCustomer(String name, String phone) {
+    public AddCustomer(String name, String phone, String gender, int age, String email) {
         this.name = name;
         this.phone = phone;
+        this.gender = gender;
+        this.age = age;
+        this.email = email;
     }
 
     @Override
     public void execute(FlightBookingSystem flightBookingSystem) throws FlightBookingSystemException {
-        // TODO: implementation here
-        int newId = flightBookingSystem.getCustomers().size() + 1;
-
-        Customer customer = new Customer(newId, name, phone);
+        int maxId = 0;
+        if (flightBookingSystem.getCustomers().size() > 0) {
+            int lastIndex = flightBookingSystem.getCustomers().size() - 1;
+            maxId = flightBookingSystem.getCustomers().get(lastIndex).getId();
+        }
+        
+        Customer customer = new Customer(++maxId, name, phone, gender, age, email);
         flightBookingSystem.addCustomer(customer);
 
         System.out.println("Customer ID:"+customer.getId()+" added successfully.");

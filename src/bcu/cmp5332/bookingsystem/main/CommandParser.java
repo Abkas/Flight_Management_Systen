@@ -1,6 +1,7 @@
 package bcu.cmp5332.bookingsystem.main;
 
 import bcu.cmp5332.bookingsystem.commands.*;
+import bcu.cmp5332.bookingsystem.model.BookingClass;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -21,19 +22,32 @@ public class CommandParser {
                 String destination = readStringWithValidation(reader, "Destination: ");
 
                 LocalDate departureDate = parseDateWithAttempts(reader);
+                
+                System.out.println("Enter Seating Configuration:");
+                int ecoRows = readIntWithValidation(reader, "Economy Rows: ");
+                int ecoCols = readIntWithValidation(reader, "Economy Cols: ");
+                int busRows = readIntWithValidation(reader, "Business Rows: ");
+                int busCols = readIntWithValidation(reader, "Business Cols: ");
+                int fstRows = readIntWithValidation(reader, "First Class Rows: ");
+                int fstCols = readIntWithValidation(reader, "First Class Cols: ");
 
-                return new AddFlight(flighNumber, origin, destination, departureDate);
+                return new AddFlight(flighNumber, origin, destination, departureDate, 
+                                     ecoRows, ecoCols, busRows, busCols, fstRows, fstCols);
             } else if (cmd.equals("addcustomer")) {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
                 String name = readStringWithValidation(reader, "Customer Name: ");
                 String phone = readStringWithValidation(reader, "Customer Phone: ");
+                String gender = readStringOptional(reader, "Gender (optional): ");
+                int age = readIntOptional(reader, "Age (optional, 0 to skip): ");
+                String email = readStringOptional(reader, "Email (optional): ");
 
-                return new AddCustomer(name, phone);
+                return new AddCustomer(name, phone, gender, age, email);
             } else if (cmd.equals("addbooking")) {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
                 int customerId = readIntWithValidation(reader, "Customer ID: ");
                 int flightId = readIntWithValidation(reader, "Flight ID: ");
-                return new AddBooking(customerId, flightId);
+                BookingClass bookingClass = readBookingClassWithValidation(reader, "Class (Economy/Business/First): ");
+                return new AddBooking(customerId, flightId, bookingClass);
             } else if (cmd.equals("cancelbooking")) {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
                 int customerId = readIntWithValidation(reader, "Customer ID: ");
@@ -113,6 +127,28 @@ public class CommandParser {
         }
         return input;
     }
+    
+    private static String readStringOptional(BufferedReader reader, String prompt) throws IOException {
+        System.out.print(prompt);
+        String input = reader.readLine();
+        if (input == null) {
+            return "";
+        }
+        return input.trim();
+    }
+    
+    private static int readIntOptional(BufferedReader reader, String prompt) throws IOException {
+        System.out.print(prompt);
+        String input = reader.readLine();
+        if (input == null || input.trim().isEmpty()) {
+            return 0;
+        }
+        try {
+            return Integer.parseInt(input.trim());
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
 
     private static int readIntWithValidation(BufferedReader reader, String prompt) throws IOException {
         while (true) {
@@ -121,6 +157,22 @@ public class CommandParser {
                 return Integer.parseInt(input);
             } catch (NumberFormatException e) {
                 System.out.println("Invalid number. Please enter a numeric value.");
+            }
+        }
+    }
+    
+    private static BookingClass readBookingClassWithValidation(BufferedReader reader, String prompt) throws IOException {
+        while (true) {
+            System.out.print(prompt);
+            String input = reader.readLine();
+            if (input != null && !input.trim().isEmpty()) {
+                try {
+                    return BookingClass.valueOf(input.trim().toUpperCase());
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Invalid class. Please enter Economy, Business, or First.");
+                }
+            } else {
+                 System.out.println("Field cannot be empty. Please try again.");
             }
         }
     }

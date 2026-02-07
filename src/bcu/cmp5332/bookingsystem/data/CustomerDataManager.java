@@ -26,14 +26,17 @@ public class CustomerDataManager implements DataManager {
                 continue;
             }
 
-            String[] parts = line.split(SEPARATOR);
+            String[] parts = line.split(SEPARATOR, -1);
             if (parts.length >= 2) {
                 int id = Integer.parseInt(parts[0]);
                 String name = parts[1];
                 // Use phone if available, otherwise empty string
                 String phone = parts.length >= 3 ? parts[2] : "";
+                String gender = parts.length >= 4 ? parts[3] : "Unknown";
+                int age = (parts.length >= 5 && !parts[4].isEmpty()) ? Integer.parseInt(parts[4]) : 0;
+                String email = parts.length >= 6 ? parts[5] : "";
                 
-                Customer customer = new Customer(id, name, phone);
+                Customer customer = new Customer(id, name, phone, gender, age, email);
                 fbs.addCustomer(customer);
             }
         }
@@ -47,7 +50,8 @@ public class CustomerDataManager implements DataManager {
         PrintWriter out = new PrintWriter(fw);
 
         for(Customer c: fbs.getCustomers()){
-            out.print(c.getId() + SEPARATOR + c.getName() + SEPARATOR + c.getPhone());
+            out.print(c.getId() + SEPARATOR + c.getName() + SEPARATOR + c.getPhone() 
+                + SEPARATOR + c.getGender() + SEPARATOR + c.getAge() + SEPARATOR + c.getEmail());
             out.println();
         }
         out.close();

@@ -20,6 +20,9 @@ public class FlightDataManager implements DataManager {
             int line_idx = 1;
             while (sc.hasNextLine()) {
                 String line = sc.nextLine();
+                if (line.trim().isEmpty()) {
+                    continue;
+                }
                 String[] properties = line.split(SEPARATOR, -1);
                 try {
                     int id = Integer.parseInt(properties[0]);
@@ -27,10 +30,22 @@ public class FlightDataManager implements DataManager {
                     String origin = properties[2];
                     String destination = properties[3];
                     LocalDate departureDate = LocalDate.parse(properties[4]);
-                    Flight flight = new Flight(id, flightNumber, origin, destination, departureDate);
+                    
+                    if (properties.length < 11) {
+                         throw new FlightBookingSystemException("Invalid flight data format on line " + line_idx);
+                    }
+                    int econRows = Integer.parseInt(properties[5]);
+                    int econCols = Integer.parseInt(properties[6]);
+                    int busRows = Integer.parseInt(properties[7]);
+                    int busCols = Integer.parseInt(properties[8]);
+                    int firstRows = Integer.parseInt(properties[9]);
+                    int firstCols = Integer.parseInt(properties[10]);
+                    
+                    Flight flight = new Flight(id, flightNumber, origin, destination, departureDate, 
+                                               econRows, econCols, busRows, busCols, firstRows, firstCols);
                     fbs.addFlight(flight);
                 } catch (NumberFormatException ex) {
-                    throw new FlightBookingSystemException("Unable to parse book id " + properties[0] + " on line " + line_idx
+                    throw new FlightBookingSystemException("Unable to parse flight id " + properties[0] + " on line " + line_idx
                         + "\nError: " + ex);
                 }
                 line_idx++;
@@ -47,6 +62,14 @@ public class FlightDataManager implements DataManager {
                 out.print(flight.getOrigin() + SEPARATOR);
                 out.print(flight.getDestination() + SEPARATOR);
                 out.print(flight.getDepartureDate() + SEPARATOR);
+                // New Fields
+                out.print(flight.getEconomyRows() + SEPARATOR);
+                out.print(flight.getEconomyColumns() + SEPARATOR);
+                out.print(flight.getBusinessRows() + SEPARATOR);
+                out.print(flight.getBusinessColumns() + SEPARATOR);
+                out.print(flight.getFirstRows() + SEPARATOR);
+                out.print(flight.getFirstColumns());
+                
                 out.println();
             }
         }

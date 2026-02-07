@@ -5,18 +5,29 @@ import bcu.cmp5332.bookingsystem.model.Flight;
 import bcu.cmp5332.bookingsystem.model.FlightBookingSystem;
 import java.time.LocalDate;
 
-public class AddFlight implements  Command {
+public class AddFlight implements Command {
 
     private final String flightNumber;
     private final String origin;
     private final String destination;
     private final LocalDate departureDate;
+    
+    private final int ecoRows, ecoCols;
+    private final int busRows, busCols;
+    private final int fstRows, fstCols;
 
-    public AddFlight(String flightNumber, String origin, String destination, LocalDate departureDate) {
+    public AddFlight(String flightNumber, String origin, String destination, LocalDate departureDate,
+                     int ecoRows, int ecoCols, int busRows, int busCols, int fstRows, int fstCols) {
         this.flightNumber = flightNumber;
         this.origin = origin;
         this.destination = destination;
         this.departureDate = departureDate;
+        this.ecoRows = ecoRows;
+        this.ecoCols = ecoCols;
+        this.busRows = busRows;
+        this.busCols = busCols;
+        this.fstRows = fstRows;
+        this.fstCols = fstCols;
     }
     
     @Override
@@ -27,8 +38,12 @@ public class AddFlight implements  Command {
             maxId = flightBookingSystem.getFlights().get(lastIndex).getId();
         }
         
-        Flight flight = new Flight(++maxId, flightNumber, origin, destination, departureDate);
+        Flight flight = new Flight(++maxId, flightNumber, origin, destination, departureDate,
+                                   ecoRows, ecoCols, busRows, busCols, fstRows, fstCols);
         flightBookingSystem.addFlight(flight);
-        System.out.println("Flight #" + flight.getId() + " added.");
+        System.out.println("Flight #" + flight.getId() + " added with capacities: " 
+            + "Economy(" + flight.getCapacity(bcu.cmp5332.bookingsystem.model.BookingClass.ECONOMY) + "), "
+            + "Business(" + flight.getCapacity(bcu.cmp5332.bookingsystem.model.BookingClass.BUSINESS) + "), "
+            + "First(" + flight.getCapacity(bcu.cmp5332.bookingsystem.model.BookingClass.FIRST) + ").");
     }
 }
