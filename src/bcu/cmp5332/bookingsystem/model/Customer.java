@@ -101,17 +101,12 @@ public class Customer {
         return sb.toString();
     }
 
-    public void cancelBooking(Flight flight) throws FlightBookingSystemException {
-        Booking toRemove = null;
-        for (Booking b : bookings) {
-            if (b.getFlight().equals(flight)) {
-                toRemove = b;
-                break;
-            }
+    
+    public void removeBooking(Booking booking) throws FlightBookingSystemException {
+        if (bookings.contains(booking)) {
+            bookings.remove(booking);
+        } else {
+            throw new FlightBookingSystemException("Booking not found for this customer.");
         }
-        if (toRemove == null) {
-            throw new FlightBookingSystemException("Customer does not have a booking for this flight.");
-        }
-        bookings.remove(toRemove);
     }
 }
