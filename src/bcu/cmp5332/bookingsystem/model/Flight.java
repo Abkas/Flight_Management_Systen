@@ -95,6 +95,13 @@ public class Flight {
     public int getFirstRows() { return firstRows; }
     public int getFirstColumns() { return firstColumns; }
 
+    public void setEconomyRows(int rows) { this.economyRows = rows; }
+    public void setEconomyColumns(int cols) { this.economyColumns = cols; }
+    public void setBusinessRows(int rows) { this.businessRows = rows; }
+    public void setBusinessColumns(int cols) { this.businessColumns = cols; }
+    public void setFirstRows(int rows) { this.firstRows = rows; }
+    public void setFirstColumns(int cols) { this.firstColumns = cols; }
+
     public int getCapacity(BookingClass _class) {
         switch (_class) {
             case ECONOMY: return economyRows * economyColumns;

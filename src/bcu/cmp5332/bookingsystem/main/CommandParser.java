@@ -98,7 +98,15 @@ public class CommandParser {
                 String origin = readStringOptional(reader, "New Origin: ");
                 String destination = readStringOptional(reader, "New Destination: ");
                 LocalDate departureDate = parseDateOptional(reader, "New Departure Date (YYYY-MM-DD, blank to skip): ");
-                return new EditFlight(flightId, flightNumber, origin, destination, departureDate);
+                System.out.println("Seat Configuration (enter -1 to keep current):");
+                int ecoRows = readIntOptionalNegative(reader, "Economy Rows: ");
+                int ecoCols = readIntOptionalNegative(reader, "Economy Cols: ");
+                int busRows = readIntOptionalNegative(reader, "Business Rows: ");
+                int busCols = readIntOptionalNegative(reader, "Business Cols: ");
+                int fstRows = readIntOptionalNegative(reader, "First Class Rows: ");
+                int fstCols = readIntOptionalNegative(reader, "First Class Cols: ");
+                return new EditFlight(flightId, flightNumber, origin, destination, departureDate,
+                                      ecoRows, ecoCols, busRows, busCols, fstRows, fstCols);
             } else if (cmd.equals("deleteflight")) {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
                 int flightId = readIntWithValidation(reader, "Flight ID to delete: ");
@@ -184,6 +192,19 @@ public class CommandParser {
             return Integer.parseInt(input.trim());
         } catch (NumberFormatException e) {
             return 0;
+        }
+    }
+
+    private static int readIntOptionalNegative(BufferedReader reader, String prompt) throws IOException {
+        System.out.print(prompt);
+        String input = reader.readLine();
+        if (input == null || input.trim().isEmpty()) {
+            return -1;  // -1 means "skip, keep current value"
+        }
+        try {
+            return Integer.parseInt(input.trim());
+        } catch (NumberFormatException e) {
+            return -1;
         }
     }
 
