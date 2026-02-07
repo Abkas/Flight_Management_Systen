@@ -76,6 +76,33 @@ public class CommandParser {
                 return new ListFlights();
             } else if (cmd.equals("listcustomers")) {
                 return new ListCustomers();
+            } else if (cmd.equals("editcustomer")) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+                int customerId = readIntWithValidation(reader, "Customer ID: ");
+                System.out.println("Leave blank to keep current value.");
+                String name = readStringOptional(reader, "New Name: ");
+                String phone = readStringOptional(reader, "New Phone: ");
+                String gender = readStringOptional(reader, "New Gender: ");
+                int age = readIntOptional(reader, "New Age (0 to skip): ");
+                String email = readStringOptional(reader, "New Email: ");
+                return new EditCustomer(customerId, name, phone, gender, age, email);
+            } else if (cmd.equals("deletecustomer")) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+                int customerId = readIntWithValidation(reader, "Customer ID to delete: ");
+                return new DeleteCustomer(customerId);
+            } else if (cmd.equals("editflight")) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+                int flightId = readIntWithValidation(reader, "Flight ID: ");
+                System.out.println("Leave blank to keep current value.");
+                String flightNumber = readStringOptional(reader, "New Flight Number: ");
+                String origin = readStringOptional(reader, "New Origin: ");
+                String destination = readStringOptional(reader, "New Destination: ");
+                LocalDate departureDate = parseDateOptional(reader, "New Departure Date (YYYY-MM-DD, blank to skip): ");
+                return new EditFlight(flightId, flightNumber, origin, destination, departureDate);
+            } else if (cmd.equals("deleteflight")) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+                int flightId = readIntWithValidation(reader, "Flight ID to delete: ");
+                return new DeleteFlight(flightId);
             } else if (cmd.equals("help")) {
                 return new Help();
             }
@@ -131,6 +158,20 @@ public class CommandParser {
             return "";
         }
         return input.trim();
+    }
+
+    private static LocalDate parseDateOptional(BufferedReader reader, String prompt) throws IOException {
+        System.out.print(prompt);
+        String input = reader.readLine();
+        if (input == null || input.trim().isEmpty()) {
+            return null;
+        }
+        try {
+            return LocalDate.parse(input.trim());
+        } catch (DateTimeParseException e) {
+            System.out.println("Invalid date format, skipping date update.");
+            return null;
+        }
     }
     
     private static int readIntOptional(BufferedReader reader, String prompt) throws IOException {

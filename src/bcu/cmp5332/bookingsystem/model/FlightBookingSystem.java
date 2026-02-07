@@ -63,4 +63,41 @@ public class FlightBookingSystem {
         }
         customers.put(customer.getId(), customer);
     }
+
+    public void removeCustomer(int customerId) throws FlightBookingSystemException {
+        if (!customers.containsKey(customerId)) {
+            throw new FlightBookingSystemException("Customer with ID " + customerId + " does not exist.");
+        }
+        Customer customer = customers.get(customerId);
+        
+        // Remove customer from all flights they're booked on
+        for (Booking booking : customer.getBookings()) {
+            Flight flight = booking.getFlight();
+            flight.removePassenger(customer);
+        }
+        
+        customers.remove(customerId);
+    }
+
+    public void removeFlight(int flightId) throws FlightBookingSystemException {
+        if (!flights.containsKey(flightId)) {
+            throw new FlightBookingSystemException("Flight with ID " + flightId + " does not exist.");
+        }
+        Flight flight = flights.get(flightId);
+        
+        // Remove all bookings for this flight from customers
+        for (Customer passenger : flight.getPassengers()) {
+            List<Booking> toRemove = new ArrayList<>();
+            for (Booking booking : passenger.getBookings()) {
+                if (booking.getFlight().equals(flight)) {
+                    toRemove.add(booking);
+                }
+            }
+            for (Booking booking : toRemove) {
+                passenger.removeBooking(booking);
+            }
+        }
+        
+        flights.remove(flightId);
+    }
 }
