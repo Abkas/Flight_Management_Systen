@@ -31,18 +31,45 @@ public class CustomersPanel extends JPanel {
         headerLabel.setFont(new Font("Arial", Font.BOLD, 28));
         headerLabel.setForeground(new Color(44, 62, 80));
         
-        JButton addCustomerBtn = new JButton("+ Add New Customer");
-        addCustomerBtn.setFont(new Font("Arial", Font.BOLD, 14));
+        JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+        buttonsPanel.setBackground(new Color(240, 240, 245));
+
+        JButton addCustomerBtn = new JButton("+ Add");
+        addCustomerBtn.setFont(new Font("Arial", Font.BOLD, 13));
         addCustomerBtn.setForeground(Color.WHITE);
         addCustomerBtn.setBackground(new Color(52, 152, 219));
         addCustomerBtn.setFocusPainted(false);
         addCustomerBtn.setBorderPainted(false);
-        addCustomerBtn.setPreferredSize(new Dimension(200, 40));
+        addCustomerBtn.setPreferredSize(new Dimension(90, 36));
         addCustomerBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         addCustomerBtn.addActionListener(e -> new AddCustomerWindow(mw));
+
+        JButton editCustomerBtn = new JButton("Edit");
+        editCustomerBtn.setFont(new Font("Arial", Font.BOLD, 13));
+        editCustomerBtn.setForeground(Color.WHITE);
+        editCustomerBtn.setBackground(new Color(241, 196, 15));
+        editCustomerBtn.setFocusPainted(false);
+        editCustomerBtn.setBorderPainted(false);
+        editCustomerBtn.setPreferredSize(new Dimension(90, 36));
+        editCustomerBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        editCustomerBtn.addActionListener(e -> new EditCustomerWindow(mw));
+
+        JButton deleteCustomerBtn = new JButton("Delete");
+        deleteCustomerBtn.setFont(new Font("Arial", Font.BOLD, 13));
+        deleteCustomerBtn.setForeground(Color.WHITE);
+        deleteCustomerBtn.setBackground(new Color(231, 76, 60));
+        deleteCustomerBtn.setFocusPainted(false);
+        deleteCustomerBtn.setBorderPainted(false);
+        deleteCustomerBtn.setPreferredSize(new Dimension(90, 36));
+        deleteCustomerBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        deleteCustomerBtn.addActionListener(e -> new DeleteCustomerWindow(mw));
+
+        buttonsPanel.add(addCustomerBtn);
+        buttonsPanel.add(editCustomerBtn);
+        buttonsPanel.add(deleteCustomerBtn);
         
         headerPanel.add(headerLabel, BorderLayout.WEST);
-        headerPanel.add(addCustomerBtn, BorderLayout.EAST);
+        headerPanel.add(buttonsPanel, BorderLayout.EAST);
         
         String[] columns = {"ID", "Name", "Phone", "Email", "Gender", "Age", "Bookings"};
         java.util.List<Customer> customersList = fbs.getCustomers();
