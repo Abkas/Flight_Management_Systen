@@ -54,7 +54,6 @@ public class DeleteCustomerWindow extends JFrame implements ActionListener {
                 return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
             }
         });
-        customerCombo.addActionListener(e -> updateInfo());
 
         gbc.gridy = 0;
         gbc.gridx = 0;
@@ -66,7 +65,8 @@ public class DeleteCustomerWindow extends JFrame implements ActionListener {
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
         deleteBtn.setPreferredSize(new Dimension(140, 34));
         deleteBtn.setBackground(new Color(231, 76, 60));
-        deleteBtn.setForeground(Color.WHITE);
+        deleteBtn.setForeground(Color.BLACK);
+        deleteBtn.setFont(deleteBtn.getFont().deriveFont(Font.BOLD));
         deleteBtn.setFocusPainted(false);
         cancelBtn.setPreferredSize(new Dimension(110, 34));
         bottomPanel.add(deleteBtn);
