@@ -63,8 +63,7 @@ public class CommandParser {
             } else if (cmd.equals("showbooking")) {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
                 int customerId = readIntWithValidation(reader, "Customer ID: ");
-                int flightId = readIntWithValidation(reader, "Flight ID: ");
-                return new ShowBooking(customerId, flightId);
+                return new ShowBooking(customerId);
             } else if (cmd.equals("showflight")) {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
                 int flightId = readIntWithValidation(reader, "Flight ID: ");
