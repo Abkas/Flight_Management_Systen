@@ -26,10 +26,17 @@ public class FlightBookingSystem {
         }
         return flights.get(id);
     }
-
+    public List<Customer> getCustomers() {
+        List<Customer> out = new ArrayList<>(customers.values());
+        return Collections.unmodifiableList(out);
+    }
+    
     public Customer getCustomerByID(int id) throws FlightBookingSystemException {
         // TODO: implementation here
-        return null;
+        if(!customers.containsKey(id)){
+            throw new FlightBookingSystemException("Customer with ID " + id + " does not exist in the flight.");
+        }
+        return customers.get(id);
     }
 
     public void addFlight(Flight flight) throws FlightBookingSystemException {
@@ -48,5 +55,12 @@ public class FlightBookingSystem {
 
     public void addCustomer(Customer customer) {
         // TODO: implementation here
+        if(customer == null){
+            throw new IllegalArgumentException("Customer cannot be null.");
+        }
+        if(customers.containsKey(customer.getId())){
+            throw new IllegalArgumentException("Customer already exists in the Flight.");
+        }
+        customers.put(customer.getId(), customer);
     }
 }

@@ -80,10 +80,35 @@ public class Flight {
 
     public String getDetailsLong() {
         // TODO: implementation here
-        return null;
+        String details = "---------------------------\n"
+                       + "Flight ID:" + id + "\n"
+                       + "Flight No: " + flightNumber + "\n"
+                       + "Flight Origin: " + origin + "\n"
+                       + "Flight Destination: " + destination + "\n"
+                       + "Flight Departure Date: " + departureDate + "\n"
+                       + "---------------------------\n"
+                       + "Passengers Present in the flight:\n";
+                       
+        for (Customer passenger : passengers) {
+            String pInfo = passenger.getId() + " - " + passenger.getName() + " - " + passenger.getPhone();
+            details += "* Id: " + pInfo + "\n";
+        }
+        
+        details += passengers.size() + " passenger(s)";
+        return details;
     }
     
-    public void addPassenger(Customer passenger) {
-        
+    public void addPassenger(Customer passenger) throws FlightBookingSystemException {
+        if(passengers.contains(passenger)){
+            throw new FlightBookingSystemException("Passenger"+passenger.getName()+"already exists in this flight");
+        }
+        passengers.add(passenger);
+    }
+
+    public void removePassenger(Customer passenger) throws FlightBookingSystemException {
+        if (!passengers.contains(passenger)) {
+            throw new FlightBookingSystemException("Passenger is not on this flight.");
+        }
+        passengers.remove(passenger);
     }
 }

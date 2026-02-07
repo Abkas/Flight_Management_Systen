@@ -1,10 +1,6 @@
 package bcu.cmp5332.bookingsystem.main;
 
-import bcu.cmp5332.bookingsystem.commands.LoadGUI;
-import bcu.cmp5332.bookingsystem.commands.ListFlights;
-import bcu.cmp5332.bookingsystem.commands.AddFlight;
-import bcu.cmp5332.bookingsystem.commands.Command;
-import bcu.cmp5332.bookingsystem.commands.Help;
+import bcu.cmp5332.bookingsystem.commands.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -18,52 +14,63 @@ public class CommandParser {
             String[] parts = line.split(" ", 3);
             String cmd = parts[0];
 
-            
             if (cmd.equals("addflight")) {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-                System.out.print("Flight Number: ");
-                String flighNumber = reader.readLine();
-                System.out.print("Origin: ");
-                String origin = reader.readLine();
-                System.out.print("Destination: ");
-                String destination = reader.readLine();
+                String flighNumber = readStringWithValidation(reader, "Flight Number: ");
+                String origin = readStringWithValidation(reader, "Origin: ");
+                String destination = readStringWithValidation(reader, "Destination: ");
 
                 LocalDate departureDate = parseDateWithAttempts(reader);
 
                 return new AddFlight(flighNumber, origin, destination, departureDate);
             } else if (cmd.equals("addcustomer")) {
-                
+                BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+                String name = readStringWithValidation(reader, "Customer Name: ");
+                String phone = readStringWithValidation(reader, "Customer Phone: ");
+
+                return new AddCustomer(name, phone);
+            } else if (cmd.equals("addbooking")) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+                int customerId = readIntWithValidation(reader, "Customer ID: ");
+                int flightId = readIntWithValidation(reader, "Flight ID: ");
+                return new AddBooking(customerId, flightId);
+            } else if (cmd.equals("cancelbooking")) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+                int customerId = readIntWithValidation(reader, "Customer ID: ");
+                int flightId = readIntWithValidation(reader, "Flight ID: ");
+                return new CancelBooking(customerId, flightId);
+            } else if (cmd.equals("editbooking")) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+                int customerId = readIntWithValidation(reader, "Customer ID: ");
+                int oldFlightId = readIntWithValidation(reader, "Old Flight ID: ");
+                int newFlightId = readIntWithValidation(reader, "New Flight ID: ");
+                return new EditBooking(customerId, oldFlightId, newFlightId);
+            } else if (cmd.equals("listbookings")) {
+                return new ListBookings();
+            } else if (cmd.equals("showbooking")) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+                int customerId = readIntWithValidation(reader, "Customer ID: ");
+                int flightId = readIntWithValidation(reader, "Flight ID: ");
+                return new ShowBooking(customerId, flightId);
+            } else if (cmd.equals("showflight")) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+                int flightId = readIntWithValidation(reader, "Flight ID: ");
+                return new ShowFlight(flightId);
+            } else if (cmd.equals("showcustomer")) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+                int customerId = readIntWithValidation(reader, "Customer ID: ");
+                return new ShowCustomer(customerId);
             } else if (cmd.equals("loadgui")) {
                 return new LoadGUI();
-            } else if (parts.length == 1) {
-                if (line.equals("listflights")) {
-                    return new ListFlights();
-                } else if (line.equals("listcustomers")) {
-                    
-                } else if (line.equals("help")) {
-                    return new Help();
-                }
-            } else if (parts.length == 2) {
-                int id = Integer.parseInt(parts[1]);
-
-                if (cmd.equals("showflight")) {
-                    
-                } else if (cmd.equals("showcustomer")) {
-                    
-                }
-            } else if (parts.length == 3) {
-                
-
-                if (cmd.equals("addbooking")) {
-                    
-                } else if (cmd.equals("editbooking")) {
-                    
-                } else if (cmd.equals("cancelbooking")) {
-                    
-                }
+            } else if (cmd.equals("listflights")) {
+                return new ListFlights();
+            } else if (cmd.equals("listcustomers")) {
+                return new ListCustomers();
+            } else if (cmd.equals("help")) {
+                return new Help();
             }
         } catch (NumberFormatException ex) {
-
+            // Handle number format exception if needed
         }
 
         throw new FlightBookingSystemException("Invalid command.");
@@ -89,5 +96,32 @@ public class CommandParser {
     
     private static LocalDate parseDateWithAttempts(BufferedReader br) throws IOException, FlightBookingSystemException {
         return parseDateWithAttempts(br, 3);
+    }
+
+    private static String readStringWithValidation(BufferedReader reader, String prompt) throws IOException {
+        String input = "";
+        while (input.isEmpty()) {
+            System.out.print(prompt);
+            input = reader.readLine();
+            if (input == null) {
+                throw new IOException("Input stream closed.");
+            }
+            input = input.trim();
+            if (input.isEmpty()) {
+                System.out.println("Field cannot be empty. Please try again.");
+            }
+        }
+        return input;
+    }
+
+    private static int readIntWithValidation(BufferedReader reader, String prompt) throws IOException {
+        while (true) {
+            String input = readStringWithValidation(reader, prompt);
+            try {
+                return Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid number. Please enter a numeric value.");
+            }
+        }
     }
 }
