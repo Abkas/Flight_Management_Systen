@@ -55,9 +55,7 @@ public class CommandParser {
             } else if (cmd.equals("editbooking")) {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
                 int customerId = readIntWithValidation(reader, "Customer ID: ");
-                int oldFlightId = readIntWithValidation(reader, "Old Flight ID: ");
-                int newFlightId = readIntWithValidation(reader, "New Flight ID: ");
-                return new EditBooking(customerId, oldFlightId, newFlightId);
+                return new EditBooking(customerId);
             } else if (cmd.equals("listbookings")) {
                 return new ListBookings();
             } else if (cmd.equals("showbooking")) {
