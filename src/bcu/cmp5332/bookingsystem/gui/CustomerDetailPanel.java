@@ -40,12 +40,39 @@ public class CustomerDetailPanel extends JPanel {
         backBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         backBtn.addActionListener(e -> mw.refreshCustomersPanel());
         
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+        buttonPanel.setBackground(new Color(240, 240, 245));
+        
+        JButton editBtn = new JButton("Edit Customer");
+        editBtn.setFont(new Font("Arial", Font.BOLD, 13));
+        editBtn.setForeground(Color.WHITE);
+        editBtn.setBackground(new Color(241, 196, 15));
+        editBtn.setFocusPainted(false);
+        editBtn.setBorderPainted(false);
+        editBtn.setPreferredSize(new Dimension(130, 36));
+        editBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        editBtn.addActionListener(e -> new EditCustomerWindow(mw));
+        
+        JButton deleteBtn = new JButton("Delete Customer");
+        deleteBtn.setFont(new Font("Arial", Font.BOLD, 13));
+        deleteBtn.setForeground(Color.WHITE);
+        deleteBtn.setBackground(new Color(231, 76, 60));
+        deleteBtn.setFocusPainted(false);
+        deleteBtn.setBorderPainted(false);
+        deleteBtn.setPreferredSize(new Dimension(140, 36));
+        deleteBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        deleteBtn.addActionListener(e -> new DeleteCustomerWindow(mw));
+        
+        buttonPanel.add(editBtn);
+        buttonPanel.add(deleteBtn);
+        
         JLabel titleLabel = new JLabel("Customer Details");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
         titleLabel.setForeground(new Color(44, 62, 80));
         
         headerPanel.add(backBtn, BorderLayout.WEST);
         headerPanel.add(titleLabel, BorderLayout.CENTER);
+        headerPanel.add(buttonPanel, BorderLayout.EAST);
         
         // Main content panel
         JPanel contentPanel = new JPanel();

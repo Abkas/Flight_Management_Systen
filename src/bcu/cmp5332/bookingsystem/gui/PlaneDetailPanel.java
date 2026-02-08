@@ -286,8 +286,17 @@ public class PlaneDetailPanel extends JPanel {
         dateLabel.setFont(new Font("Arial", Font.PLAIN, 13));
         dateLabel.setForeground(new Color(52, 152, 219));
         
-        JLabel passengersLabel = new JLabel("👥 " + flight.getPassengers().size() + " passengers");
-        passengersLabel.setFont(new Font("Arial", Font.PLAIN, 13));
+        int bookingsCount = 0;
+        for (bcu.cmp5332.bookingsystem.model.Customer customer : flight.getPassengers()) {
+            for (bcu.cmp5332.bookingsystem.model.Booking booking : customer.getBookings()) {
+                if (booking.getFlight().getId() == flight.getId() && !booking.isCancelled()) {
+                    bookingsCount++;
+                }
+            }
+        }
+        
+        JLabel passengersLabel = new JLabel("🎫 " + bookingsCount + " bookings");
+        passengersLabel.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 13));
         passengersLabel.setForeground(new Color(46, 204, 113));
         
         centerPanel.add(dateLabel);

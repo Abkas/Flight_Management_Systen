@@ -32,39 +32,17 @@ public class FlightsPanel extends JPanel {
         JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         buttonsPanel.setBackground(new Color(240, 240, 245));
 
-        JButton addFlightBtn = new JButton("+ Add");
+        JButton addFlightBtn = new JButton("+ Add Flight");
         addFlightBtn.setFont(new Font("Arial", Font.BOLD, 13));
         addFlightBtn.setForeground(Color.WHITE);
         addFlightBtn.setBackground(new Color(46, 204, 113));
         addFlightBtn.setFocusPainted(false);
         addFlightBtn.setBorderPainted(false);
-        addFlightBtn.setPreferredSize(new Dimension(90, 36));
+        addFlightBtn.setPreferredSize(new Dimension(130, 36));
         addFlightBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         addFlightBtn.addActionListener(e -> new AddFlightWindow(mw));
 
-        JButton editFlightBtn = new JButton("Edit");
-        editFlightBtn.setFont(new Font("Arial", Font.BOLD, 13));
-        editFlightBtn.setForeground(Color.WHITE);
-        editFlightBtn.setBackground(new Color(241, 196, 15));
-        editFlightBtn.setFocusPainted(false);
-        editFlightBtn.setBorderPainted(false);
-        editFlightBtn.setPreferredSize(new Dimension(90, 36));
-        editFlightBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        editFlightBtn.addActionListener(e -> new EditFlightWindow(mw));
-
-        JButton deleteFlightBtn = new JButton("Delete");
-        deleteFlightBtn.setFont(new Font("Arial", Font.BOLD, 13));
-        deleteFlightBtn.setForeground(Color.WHITE);
-        deleteFlightBtn.setBackground(new Color(231, 76, 60));
-        deleteFlightBtn.setFocusPainted(false);
-        deleteFlightBtn.setBorderPainted(false);
-        deleteFlightBtn.setPreferredSize(new Dimension(90, 36));
-        deleteFlightBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        deleteFlightBtn.addActionListener(e -> new DeleteFlightWindow(mw));
-
         buttonsPanel.add(addFlightBtn);
-        buttonsPanel.add(editFlightBtn);
-        buttonsPanel.add(deleteFlightBtn);
         
         headerPanel.add(headerLabel, BorderLayout.WEST);
         headerPanel.add(buttonsPanel, BorderLayout.EAST);
