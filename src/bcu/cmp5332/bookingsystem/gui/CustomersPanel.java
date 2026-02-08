@@ -4,8 +4,6 @@ import bcu.cmp5332.bookingsystem.model.Customer;
 import bcu.cmp5332.bookingsystem.model.FlightBookingSystem;
 import java.awt.*;
 import javax.swing.*;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.border.EmptyBorder;
 
 public class CustomersPanel extends JPanel {
@@ -71,46 +69,124 @@ public class CustomersPanel extends JPanel {
         headerPanel.add(headerLabel, BorderLayout.WEST);
         headerPanel.add(buttonsPanel, BorderLayout.EAST);
         
-        String[] columns = {"ID", "Name", "Phone", "Email", "Gender", "Age", "Bookings"};
-        java.util.List<Customer> customersList = fbs.getCustomers();
+        // Cards grid
+        JPanel cardsPanel = new JPanel(new GridLayout(0, 3, 15, 15));
+        cardsPanel.setBackground(new Color(240, 240, 245));
         
-        Object[][] data = new Object[customersList.size()][7];
-        for (int i = 0; i < customersList.size(); i++) {
-            Customer customer = customersList.get(i);
-            data[i][0] = customer.getId();
-            data[i][1] = customer.getName();
-            data[i][2] = customer.getPhone();
-            data[i][3] = customer.getEmail() != null && !customer.getEmail().isEmpty() ? customer.getEmail() : "N/A";
-            data[i][4] = customer.getGender() != null && !customer.getGender().isEmpty() ? customer.getGender() : "N/A";
-            data[i][5] = customer.getAge() > 0 ? customer.getAge() : "N/A";
-            data[i][6] = customer.getBookings().size();
+        java.util.List<Customer> customersList = fbs.getCustomers();
+        for (Customer customer : customersList) {
+            cardsPanel.add(createCustomerCard(customer));
         }
         
-        JTable table = new JTable(data, columns);
-        table.setFont(new Font("Arial", Font.PLAIN, 14));
-        table.setRowHeight(28);
-        table.setFillsViewportHeight(true);
-        table.setAutoCreateRowSorter(true);
-        table.setGridColor(new Color(210, 210, 210));
-        table.setShowVerticalLines(false);
-        table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-
-        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
-        table.setDefaultRenderer(Object.class, centerRenderer);
-
-        JTableHeader header = table.getTableHeader();
-        header.setFont(new Font("Arial", Font.BOLD, 14));
-        header.setBackground(new Color(235, 235, 235));
-        header.setForeground(Color.BLACK);
-        header.setReorderingAllowed(false);
-        header.setPreferredSize(new Dimension(0, 30));
-
-        JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setColumnHeaderView(header);
-        scrollPane.setBorder(BorderFactory.createLineBorder(new Color(220, 220, 220)));
+        JScrollPane scrollPane = new JScrollPane(cardsPanel);
+        scrollPane.setBorder(null);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         
         add(headerPanel, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
+    }
+    
+    private JPanel createCustomerCard(Customer customer) {
+        JPanel card = new JPanel();
+        card.setLayout(new BorderLayout(10, 10));
+        card.setBackground(Color.WHITE);
+        card.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(200, 200, 200), 1),
+            new EmptyBorder(15, 15, 15, 15)
+        ));
+        card.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
+        // Icon and ID
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.setBackground(Color.WHITE);
+        
+        JLabel iconLabel = new JLabel("👤");
+        iconLabel.setFont(new Font("Arial", Font.PLAIN, 32));
+        
+        JLabel idLabel = new JLabel("#" + customer.getId());
+        idLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        idLabel.setForeground(new Color(127, 140, 141));
+        
+        topPanel.add(iconLabel, BorderLayout.WEST);
+        topPanel.add(idLabel, BorderLayout.EAST);
+        
+        // Customer info
+        JPanel infoPanel = new JPanel();
+        infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
+        infoPanel.setBackground(Color.WHITE);
+        
+        JLabel nameLabel = new JLabel(customer.getName());
+        nameLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        nameLabel.setForeground(new Color(44, 62, 80));
+        
+        JLabel phoneLabel = new JLabel("📱 " + customer.getPhone());
+        phoneLabel.setFont(new Font("Arial", Font.PLAIN, 13));
+        phoneLabel.setForeground(new Color(52, 73, 94));
+        
+        String email = customer.getEmail() != null && !customer.getEmail().isEmpty() 
+            ? customer.getEmail() : "No email";
+        JLabel emailLabel = new JLabel("✉️ " + email);
+        emailLabel.setFont(new Font("Arial", Font.PLAIN, 13));
+        emailLabel.setForeground(new Color(52, 73, 94));
+        
+        String demographics = "";
+        if (customer.getGender() != null && !customer.getGender().isEmpty()) {
+            demographics += customer.getGender();
+        }
+        if (customer.getAge() > 0) {
+            demographics += (demographics.isEmpty() ? "" : ", ") + customer.getAge() + " yrs";
+        }
+        if (!demographics.isEmpty()) {
+            JLabel demoLabel = new JLabel("👥 " + demographics);
+            demoLabel.setFont(new Font("Arial", Font.PLAIN, 13));
+            demoLabel.setForeground(new Color(52, 73, 94));
+            infoPanel.add(demoLabel);
+        }
+        
+        infoPanel.add(nameLabel);
+        infoPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+        infoPanel.add(phoneLabel);
+        infoPanel.add(Box.createRigidArea(new Dimension(0, 3)));
+        infoPanel.add(emailLabel);
+        
+        // Booking count badge
+        JPanel bookingsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        bookingsPanel.setBackground(Color.WHITE);
+        
+        JLabel bookingsLabel = new JLabel("  " + customer.getBookings().size() + " Bookings  ");
+        bookingsLabel.setFont(new Font("Arial", Font.BOLD, 12));
+        bookingsLabel.setForeground(Color.WHITE);
+        bookingsLabel.setBackground(new Color(46, 204, 113));
+        bookingsLabel.setOpaque(true);
+        bookingsLabel.setBorder(new EmptyBorder(5, 8, 5, 8));
+        
+        bookingsPanel.add(bookingsLabel);
+        
+        card.add(topPanel, BorderLayout.NORTH);
+        card.add(infoPanel, BorderLayout.CENTER);
+        card.add(bookingsPanel, BorderLayout.SOUTH);
+        
+        // Hover effect
+        card.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                card.setBackground(new Color(245, 245, 250));
+                card.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(new Color(52, 152, 219), 2),
+                    new EmptyBorder(14, 14, 14, 14)
+                ));
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                card.setBackground(Color.WHITE);
+                card.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(new Color(200, 200, 200), 1),
+                    new EmptyBorder(15, 15, 15, 15)
+                ));
+            }
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                mw.showCustomerDetail(customer);
+            }
+        });
+        
+        return card;
     }
 }
