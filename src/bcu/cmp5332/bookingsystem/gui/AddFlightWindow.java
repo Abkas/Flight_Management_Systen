@@ -3,7 +3,9 @@ package bcu.cmp5332.bookingsystem.gui;
 import bcu.cmp5332.bookingsystem.commands.AddFlight;
 import bcu.cmp5332.bookingsystem.commands.Command;
 import bcu.cmp5332.bookingsystem.main.FlightBookingSystemException;
+import bcu.cmp5332.bookingsystem.model.Plane;
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -13,9 +15,12 @@ import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -30,13 +35,7 @@ public class AddFlightWindow extends JFrame implements ActionListener {
     private JTextField originText = new JTextField();
     private JTextField destinationText = new JTextField();
     private JTextField depDateText = new JTextField();
-
-    private JTextField firstRowsText = new JTextField();
-    private JTextField firstColsText = new JTextField();
-    private JTextField businessRowsText = new JTextField();
-    private JTextField businessColsText = new JTextField();
-    private JTextField economyRowsText = new JTextField();
-    private JTextField economyColsText = new JTextField();
+    private JComboBox<Plane> planeCombo;
 
     private JButton addBtn = new JButton("Add");
     private JButton cancelBtn = new JButton("Cancel");
@@ -53,7 +52,7 @@ public class AddFlightWindow extends JFrame implements ActionListener {
         }
 
         setTitle("Add New Flight");
-        setSize(500, 360);
+        setSize(500, 280);
 
         JPanel contentPanel = new JPanel(new BorderLayout(10, 10));
 
@@ -71,6 +70,7 @@ public class AddFlightWindow extends JFrame implements ActionListener {
         JLabel originLabel = new JLabel("Origin:", SwingConstants.RIGHT);
         JLabel destinationLabel = new JLabel("Destination:", SwingConstants.RIGHT);
         JLabel dateLabel = new JLabel("Departure Date (YYYY-MM-DD):", SwingConstants.RIGHT);
+        JLabel planeLabel = new JLabel("Aircraft:", SwingConstants.RIGHT);
 
         flightNoText.setPreferredSize(new Dimension(220, 26));
         originText.setPreferredSize(new Dimension(220, 26));
@@ -100,55 +100,26 @@ public class AddFlightWindow extends JFrame implements ActionListener {
         gbc.gridx = 1;
         formPanel.add(depDateText, gbc);
 
-        // Seat configuration section
-        gbc.gridy++;
-        gbc.gridx = 0;
-        gbc.gridwidth = 2;
-        JLabel seatConfigLabel = new JLabel("Seat Configuration", SwingConstants.CENTER);
-        seatConfigLabel.setFont(seatConfigLabel.getFont().deriveFont(16f));
-        formPanel.add(seatConfigLabel, gbc);
-
-        gbc.gridwidth = 1;
-
-        firstRowsText.setPreferredSize(new Dimension(60, 26));
-        firstColsText.setPreferredSize(new Dimension(60, 26));
-        businessRowsText.setPreferredSize(new Dimension(60, 26));
-        businessColsText.setPreferredSize(new Dimension(60, 26));
-        economyRowsText.setPreferredSize(new Dimension(60, 26));
-        economyColsText.setPreferredSize(new Dimension(60, 26));
+        // Plane selection
+        java.util.List<Plane> planes = mw.getFlightBookingSystem().getPlanes();
+        planeCombo = new JComboBox<>(planes.toArray(new Plane[0]));
+        planeCombo.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                if (value instanceof Plane) {
+                    Plane p = (Plane) value;
+                    value = p.getId() + " - " + p.getModel() + " (" + p.getRegistrationNumber() + ")";
+                }
+                return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+            }
+        });
+        planeCombo.setPreferredSize(new Dimension(220, 26));
 
         gbc.gridy++;
         gbc.gridx = 0;
-        formPanel.add(new JLabel("FIRST: rows, columns", SwingConstants.RIGHT), gbc);
-        JPanel firstPanel = new JPanel();
-        firstPanel.add(new JLabel("Rows:"));
-        firstPanel.add(firstRowsText);
-        firstPanel.add(new JLabel("Cols:"));
-        firstPanel.add(firstColsText);
+        formPanel.add(planeLabel, gbc);
         gbc.gridx = 1;
-        formPanel.add(firstPanel, gbc);
-
-        gbc.gridy++;
-        gbc.gridx = 0;
-        formPanel.add(new JLabel("BUSINESS: rows, columns", SwingConstants.RIGHT), gbc);
-        JPanel businessPanel = new JPanel();
-        businessPanel.add(new JLabel("Rows:"));
-        businessPanel.add(businessRowsText);
-        businessPanel.add(new JLabel("Cols:"));
-        businessPanel.add(businessColsText);
-        gbc.gridx = 1;
-        formPanel.add(businessPanel, gbc);
-
-        gbc.gridy++;
-        gbc.gridx = 0;
-        formPanel.add(new JLabel("ECONOMY: rows, columns", SwingConstants.RIGHT), gbc);
-        JPanel economyPanel = new JPanel();
-        economyPanel.add(new JLabel("Rows:"));
-        economyPanel.add(economyRowsText);
-        economyPanel.add(new JLabel("Cols:"));
-        economyPanel.add(economyColsText);
-        gbc.gridx = 1;
-        formPanel.add(economyPanel, gbc);
+        formPanel.add(planeCombo, gbc);
 
         JPanel bottomPanel = new JPanel();
         addBtn.setPreferredSize(new Dimension(110, 32));
@@ -192,23 +163,12 @@ public class AddFlightWindow extends JFrame implements ActionListener {
                 throw new FlightBookingSystemException("Date must be in YYYY-MM-DD format");
             }
             
-            int firstRows = Integer.parseInt(firstRowsText.getText());
-            int firstCols = Integer.parseInt(firstColsText.getText());
-            int busRows = Integer.parseInt(businessRowsText.getText());
-            int busCols = Integer.parseInt(businessColsText.getText());
-            int ecoRows = Integer.parseInt(economyRowsText.getText());
-            int ecoCols = Integer.parseInt(economyColsText.getText());
-
-            if (firstRows < 0 || firstCols < 0 || busRows < 0 || busCols < 0 || ecoRows < 0 || ecoCols < 0) {
-                throw new FlightBookingSystemException("Row and column counts cannot be negative.");
-            }
-
-            if (firstRows * firstCols == 0 && busRows * busCols == 0 && ecoRows * ecoCols == 0) {
-                throw new FlightBookingSystemException("At least one class must have seats.");
+            Plane plane = (Plane) planeCombo.getSelectedItem();
+            if (plane == null) {
+                throw new FlightBookingSystemException("Please select an aircraft");
             }
             
-            Command addFlight = new AddFlight(flightNumber, origin, destination, departureDate,
-                                             ecoRows, ecoCols, busRows, busCols, firstRows, firstCols);
+            Command addFlight = new AddFlight(flightNumber, origin, destination, departureDate, plane.getId());
             addFlight.execute(mw.getFlightBookingSystem());
             
             JOptionPane.showMessageDialog(this, "Flight added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);

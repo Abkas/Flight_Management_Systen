@@ -2,6 +2,7 @@ package bcu.cmp5332.bookingsystem.data;
 
 import bcu.cmp5332.bookingsystem.main.FlightBookingSystemException;
 import bcu.cmp5332.bookingsystem.model.Flight;
+import bcu.cmp5332.bookingsystem.model.Plane;
 import bcu.cmp5332.bookingsystem.model.FlightBookingSystem;
 import java.io.File;
 import java.io.FileWriter;
@@ -31,18 +32,17 @@ public class FlightDataManager implements DataManager {
                     String destination = properties[3];
                     LocalDate departureDate = LocalDate.parse(properties[4]);
                     
-                    if (properties.length < 11) {
-                         throw new FlightBookingSystemException("Invalid flight data format on line " + line_idx);
+                    Plane plane = null;
+                    if (properties.length >= 6 && !properties[5].isEmpty()) {
+                        try {
+                            int planeId = Integer.parseInt(properties[5]);
+                            plane = fbs.getPlaneByID(planeId);
+                        } catch (NumberFormatException | FlightBookingSystemException ex) {
+                            System.err.println("Warning: Could not load plane for flight " + id + ": " + ex.getMessage());
+                        }
                     }
-                    int econRows = Integer.parseInt(properties[5]);
-                    int econCols = Integer.parseInt(properties[6]);
-                    int busRows = Integer.parseInt(properties[7]);
-                    int busCols = Integer.parseInt(properties[8]);
-                    int firstRows = Integer.parseInt(properties[9]);
-                    int firstCols = Integer.parseInt(properties[10]);
                     
-                    Flight flight = new Flight(id, flightNumber, origin, destination, departureDate, 
-                                               econRows, econCols, busRows, busCols, firstRows, firstCols);
+                    Flight flight = new Flight(id, flightNumber, origin, destination, departureDate, plane);
                     fbs.addFlight(flight);
                 } catch (NumberFormatException ex) {
                     throw new FlightBookingSystemException("Unable to parse flight id " + properties[0] + " on line " + line_idx
@@ -62,14 +62,10 @@ public class FlightDataManager implements DataManager {
                 out.print(flight.getOrigin() + SEPARATOR);
                 out.print(flight.getDestination() + SEPARATOR);
                 out.print(flight.getDepartureDate() + SEPARATOR);
-                // New Fields
-                out.print(flight.getEconomyRows() + SEPARATOR);
-                out.print(flight.getEconomyColumns() + SEPARATOR);
-                out.print(flight.getBusinessRows() + SEPARATOR);
-                out.print(flight.getBusinessColumns() + SEPARATOR);
-                out.print(flight.getFirstRows() + SEPARATOR);
-                out.print(flight.getFirstColumns());
-                
+                // Store plane ID instead of all capacity fields
+                if (flight.getPlane() != null) {
+                    out.print(flight.getPlane().getId());
+                }
                 out.println();
             }
         }

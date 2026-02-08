@@ -23,16 +23,9 @@ public class CommandParser {
 
                 LocalDate departureDate = parseDateWithAttempts(reader);
                 
-                System.out.println("Enter Seating Configuration:");
-                int ecoRows = readIntWithValidation(reader, "Economy Rows: ");
-                int ecoCols = readIntWithValidation(reader, "Economy Cols: ");
-                int busRows = readIntWithValidation(reader, "Business Rows: ");
-                int busCols = readIntWithValidation(reader, "Business Cols: ");
-                int fstRows = readIntWithValidation(reader, "First Class Rows: ");
-                int fstCols = readIntWithValidation(reader, "First Class Cols: ");
+                int planeId = readIntWithValidation(reader, "Plane ID: ");
 
-                return new AddFlight(flighNumber, origin, destination, departureDate, 
-                                     ecoRows, ecoCols, busRows, busCols, fstRows, fstCols);
+                return new AddFlight(flighNumber, origin, destination, departureDate, planeId);
             } else if (cmd.equals("addcustomer")) {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
                 String name = readStringWithValidation(reader, "Customer Name: ");
@@ -98,6 +91,36 @@ public class CommandParser {
                 String origin = readStringOptional(reader, "New Origin: ");
                 String destination = readStringOptional(reader, "New Destination: ");
                 LocalDate departureDate = parseDateOptional(reader, "New Departure Date (YYYY-MM-DD, blank to skip): ");
+                int planeId = readIntOptional(reader, "New Plane ID (0 to skip): ");
+                return new EditFlight(flightId, flightNumber, origin, destination, departureDate, planeId);
+            } else if (cmd.equals("deleteflight")) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+                int flightId = readIntWithValidation(reader, "Flight ID to delete: ");
+                return new DeleteFlight(flightId);
+            } else if (cmd.equals("addplane")) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+                String model = readStringWithValidation(reader, "Plane Model: ");
+                String registrationNumber = readStringWithValidation(reader, "Registration Number: ");
+                System.out.println("Enter Seating Configuration:");
+                int ecoRows = readIntWithValidation(reader, "Economy Rows: ");
+                int ecoCols = readIntWithValidation(reader, "Economy Cols: ");
+                int busRows = readIntWithValidation(reader, "Business Rows: ");
+                int busCols = readIntWithValidation(reader, "Business Cols: ");
+                int fstRows = readIntWithValidation(reader, "First Class Rows: ");
+                int fstCols = readIntWithValidation(reader, "First Class Cols: ");
+                return new AddPlane(model, registrationNumber, ecoRows, ecoCols, busRows, busCols, fstRows, fstCols);
+            } else if (cmd.equals("listplanes")) {
+                return new ListPlanes();
+            } else if (cmd.equals("showplane")) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+                int planeId = readIntWithValidation(reader, "Plane ID: ");
+                return new ShowPlane(planeId);
+            } else if (cmd.equals("editplane")) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+                int planeId = readIntWithValidation(reader, "Plane ID: ");
+                System.out.println("Leave blank to keep current value.");
+                String model = readStringOptional(reader, "New Model: ");
+                String registrationNumber = readStringOptional(reader, "New Registration Number: ");
                 System.out.println("Seat Configuration (enter -1 to keep current):");
                 int ecoRows = readIntOptionalNegative(reader, "Economy Rows: ");
                 int ecoCols = readIntOptionalNegative(reader, "Economy Cols: ");
@@ -105,12 +128,11 @@ public class CommandParser {
                 int busCols = readIntOptionalNegative(reader, "Business Cols: ");
                 int fstRows = readIntOptionalNegative(reader, "First Class Rows: ");
                 int fstCols = readIntOptionalNegative(reader, "First Class Cols: ");
-                return new EditFlight(flightId, flightNumber, origin, destination, departureDate,
-                                      ecoRows, ecoCols, busRows, busCols, fstRows, fstCols);
-            } else if (cmd.equals("deleteflight")) {
+                return new EditPlane(planeId, model, registrationNumber, ecoRows, ecoCols, busRows, busCols, fstRows, fstCols);
+            } else if (cmd.equals("deleteplane")) {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-                int flightId = readIntWithValidation(reader, "Flight ID to delete: ");
-                return new DeleteFlight(flightId);
+                int planeId = readIntWithValidation(reader, "Plane ID to delete: ");
+                return new DeletePlane(planeId);
             } else if (cmd.equals("help")) {
                 return new Help();
             }

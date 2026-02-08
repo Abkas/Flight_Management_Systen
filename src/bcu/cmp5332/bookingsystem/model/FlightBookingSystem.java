@@ -10,6 +10,7 @@ public class FlightBookingSystem {
     
     private final Map<Integer, Customer> customers = new TreeMap<>();
     private final Map<Integer, Flight> flights = new TreeMap<>();
+    private final Map<Integer, Plane> planes = new TreeMap<>();
 
     public LocalDate getSystemDate() {
         return systemDate;
@@ -99,5 +100,47 @@ public class FlightBookingSystem {
         }
         
         flights.remove(flightId);
+    }
+
+    // Plane management methods
+    public void addPlane(Plane plane) throws FlightBookingSystemException {
+        if (planes.containsKey(plane.getId())) {
+            throw new IllegalArgumentException("Duplicate plane ID.");
+        }
+        for (Plane existing : planes.values()) {
+            if (existing.getRegistrationNumber().equals(plane.getRegistrationNumber())) {
+                throw new FlightBookingSystemException("A plane with registration number " 
+                        + plane.getRegistrationNumber() + " already exists in the system");
+            }
+        }
+        planes.put(plane.getId(), plane);
+    }
+
+    public List<Plane> getPlanes() {
+        List<Plane> out = new ArrayList<>(planes.values());
+        return Collections.unmodifiableList(out);
+    }
+
+    public Plane getPlaneByID(int id) throws FlightBookingSystemException {
+        if (!planes.containsKey(id)) {
+            throw new FlightBookingSystemException("There is no plane with that ID.");
+        }
+        return planes.get(id);
+    }
+
+    public void removePlane(int planeId) throws FlightBookingSystemException {
+        if (!planes.containsKey(planeId)) {
+            throw new FlightBookingSystemException("Plane with ID " + planeId + " does not exist.");
+        }
+        
+        // Check if any flights are using this plane
+        for (Flight flight : flights.values()) {
+            if (flight.getPlane() != null && flight.getPlane().getId() == planeId) {
+                throw new FlightBookingSystemException("Cannot delete plane. It is assigned to flight #" 
+                        + flight.getId() + " (" + flight.getFlightNumber() + ")");
+            }
+        }
+        
+        planes.remove(planeId);
     }
 }

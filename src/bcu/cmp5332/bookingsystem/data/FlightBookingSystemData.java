@@ -14,6 +14,8 @@ public class FlightBookingSystemData {
     
     // runs only once when the object gets loaded to memory
     static {
+        // Load planes first, then flights (since flights reference planes)
+        dataManagers.add(new PlaneDataManager());
         dataManagers.add(new FlightDataManager());
         
         /* Uncomment the two lines below when the implementation of their 

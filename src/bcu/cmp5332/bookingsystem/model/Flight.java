@@ -15,31 +15,17 @@ public class Flight {
     private String origin;
     private String destination;
     private LocalDate departureDate;
-
-    // Seating capacities
-    private int economyRows;
-    private int economyColumns;
-    private int businessRows;
-    private int businessColumns;
-    private int firstRows;
-    private int firstColumns;
+    private Plane plane;
 
     private final Set<Customer> passengers;
 
-    public Flight(int id, String flightNumber, String origin, String destination, LocalDate departureDate, 
-                 int economyRows, int economyColumns, int businessRows, int businessColumns, int firstRows, int firstColumns) {
+    public Flight(int id, String flightNumber, String origin, String destination, LocalDate departureDate, Plane plane) {
         this.id = id;
         this.flightNumber = flightNumber;
         this.origin = origin;
         this.destination = destination;
         this.departureDate = departureDate;
-        
-        this.economyRows = economyRows;
-        this.economyColumns = economyColumns;
-        this.businessRows = businessRows;
-        this.businessColumns = businessColumns;
-        this.firstRows = firstRows;
-        this.firstColumns = firstColumns;
+        this.plane = plane;
 
         passengers = new HashSet<>();
     }
@@ -88,27 +74,19 @@ public class Flight {
         this.departureDate = departureDate;
     }
 
-    public int getEconomyRows() { return economyRows; }
-    public int getEconomyColumns() { return economyColumns; }
-    public int getBusinessRows() { return businessRows; }
-    public int getBusinessColumns() { return businessColumns; }
-    public int getFirstRows() { return firstRows; }
-    public int getFirstColumns() { return firstColumns; }
+    public Plane getPlane() {
+        return plane;
+    }
 
-    public void setEconomyRows(int rows) { this.economyRows = rows; }
-    public void setEconomyColumns(int cols) { this.economyColumns = cols; }
-    public void setBusinessRows(int rows) { this.businessRows = rows; }
-    public void setBusinessColumns(int cols) { this.businessColumns = cols; }
-    public void setFirstRows(int rows) { this.firstRows = rows; }
-    public void setFirstColumns(int cols) { this.firstColumns = cols; }
+    public void setPlane(Plane plane) {
+        this.plane = plane;
+    }
 
     public int getCapacity(BookingClass _class) {
-        switch (_class) {
-            case ECONOMY: return economyRows * economyColumns;
-            case BUSINESS: return businessRows * businessColumns;
-            case FIRST: return firstRows * firstColumns;
-            default: return 0;
+        if (plane == null) {
+            return 0;
         }
+        return plane.getCapacity(_class);
     }
     
     public List<Customer> getPassengers() {
@@ -127,13 +105,20 @@ public class Flight {
                        + "Flight No: " + flightNumber + "\n"
                        + "Flight Origin: " + origin + "\n"
                        + "Flight Destination: " + destination + "\n"
-                       + "Flight Departure Date: " + departureDate + "\n"
-                       + "Seating:\n"
-                       + "  Economy: " + economyRows + "x" + economyColumns + " (" + getCapacity(BookingClass.ECONOMY) + ")\n"
-                       + "  Business: " + businessRows + "x" + businessColumns + " (" + getCapacity(BookingClass.BUSINESS) + ")\n"
-                       + "  First: " + firstRows + "x" + firstColumns + " (" + getCapacity(BookingClass.FIRST) + ")\n"
-                       + "---------------------------\n"
-                       + "Passengers Present in the flight:\n";
+                       + "Flight Departure Date: " + departureDate + "\n";
+        
+        if (plane != null) {
+            details += "Aircraft: " + plane.getModel() + " (" + plane.getRegistrationNumber() + ")\n"
+                    + "Seating:\n"
+                    + "  Economy: " + plane.getEconomyRows() + "x" + plane.getEconomyColumns() + " (" + getCapacity(BookingClass.ECONOMY) + ")\n"
+                    + "  Business: " + plane.getBusinessRows() + "x" + plane.getBusinessColumns() + " (" + getCapacity(BookingClass.BUSINESS) + ")\n"
+                    + "  First: " + plane.getFirstRows() + "x" + plane.getFirstColumns() + " (" + getCapacity(BookingClass.FIRST) + ")\n";
+        } else {
+            details += "Aircraft: Not assigned\n";
+        }
+        
+        details += "---------------------------\n"
+                + "Passengers Present in the flight:\n";
                        
         for (Customer passenger : passengers) {
             String pInfo = passenger.getId() + " - " + passenger.getName() + " - " + passenger.getPhone();
@@ -145,21 +130,17 @@ public class Flight {
     }
     
     public int getRows(BookingClass _class) {
-        switch (_class) {
-            case ECONOMY: return economyRows;
-            case BUSINESS: return businessRows;
-            case FIRST: return firstRows;
-            default: return 0;
+        if (plane == null) {
+            return 0;
         }
+        return plane.getRows(_class);
     }
     
     public int getColumns(BookingClass _class) {
-        switch (_class) {
-            case ECONOMY: return economyColumns;
-            case BUSINESS: return businessColumns;
-            case FIRST: return firstColumns;
-            default: return 0;
+        if (plane == null) {
+            return 0;
         }
+        return plane.getColumns(_class);
     }
 
     public boolean hasSpace(BookingClass _class) {

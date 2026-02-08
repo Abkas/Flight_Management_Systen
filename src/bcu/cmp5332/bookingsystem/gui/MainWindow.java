@@ -16,6 +16,7 @@ public class MainWindow extends JFrame implements ActionListener {
     // Sidebar buttons
     private JButton dashboardBtn;
     private JButton flightsBtn;
+    private JButton planesBtn;
     private JButton customersBtn;
     private JButton bookingsBtn;
     private JButton exitBtn;
@@ -79,12 +80,15 @@ public class MainWindow extends JFrame implements ActionListener {
         // Navigation buttons
         dashboardBtn = createSidebarButton("Dashboard", new Color(52, 152, 219));
         flightsBtn = createSidebarButton("Flights", new Color(46, 204, 113));
+        planesBtn = createSidebarButton("Aircraft", new Color(41, 128, 185));
         customersBtn = createSidebarButton("Customers", new Color(155, 89, 182));
         bookingsBtn = createSidebarButton("Bookings", new Color(230, 126, 34));
         
         sidebarPanel.add(dashboardBtn);
         sidebarPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         sidebarPanel.add(flightsBtn);
+        sidebarPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        sidebarPanel.add(planesBtn);
         sidebarPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         sidebarPanel.add(customersBtn);
         sidebarPanel.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -99,6 +103,7 @@ public class MainWindow extends JFrame implements ActionListener {
         // Add action listeners
         dashboardBtn.addActionListener(this);
         flightsBtn.addActionListener(this);
+        planesBtn.addActionListener(this);
         customersBtn.addActionListener(this);
         bookingsBtn.addActionListener(this);
         exitBtn.addActionListener(this);
@@ -157,8 +162,19 @@ public class MainWindow extends JFrame implements ActionListener {
         contentPanel.repaint();
     }
     
+    private void showPlanesPanel() {
+        contentPanel.removeAll();
+        contentPanel.add(new PlanesPanel(this));
+        contentPanel.revalidate();
+        contentPanel.repaint();
+    }
+    
     public void refreshFlightsPanel() {
         showFlightsPanel();
+    }
+    
+    public void refreshPlanesPanel() {
+        showPlanesPanel();
     }
     
     public void refreshCustomersPanel() {
@@ -175,6 +191,8 @@ public class MainWindow extends JFrame implements ActionListener {
             showDashboard();
         } else if (ae.getSource() == flightsBtn) {
             showFlightsPanel();
+        } else if (ae.getSource() == planesBtn) {
+            showPlanesPanel();
         } else if (ae.getSource() == customersBtn) {
             showCustomersPanel();
         } else if (ae.getSource() == bookingsBtn) {
