@@ -7,10 +7,24 @@ import bcu.cmp5332.bookingsystem.model.Flight;
 import bcu.cmp5332.bookingsystem.model.FlightBookingSystem;
 import java.time.LocalDate;
 
+/**
+ * Command that lets a customer change one of their
+ * bookings to a new flight, class and seat.
+ *
+ * It also shows any price difference between the
+ * old booking and the new one.
+ *
+ * @author Abhis
+ */
 public class EditBooking implements Command {
 
     private final int customerId;
 
+    /**
+     * Creates a new EditBooking command.
+     *
+     * @param customerId the id of the customer
+     */
     public EditBooking(int customerId) {
         this.customerId = customerId;
     }

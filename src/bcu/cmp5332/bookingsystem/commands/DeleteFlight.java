@@ -4,10 +4,21 @@ import bcu.cmp5332.bookingsystem.main.FlightBookingSystemException;
 import bcu.cmp5332.bookingsystem.model.FlightBookingSystem;
 import bcu.cmp5332.bookingsystem.model.Flight;
 
+/**
+ * Command that deletes a flight from the system and
+ * reports how many passengers had bookings on it.
+ *
+ * @author Abhis
+ */
 public class DeleteFlight implements Command {
 
     private final int flightId;
 
+    /**
+     * Creates a new DeleteFlight command.
+     *
+     * @param flightId the id of the flight to remove
+     */
     public DeleteFlight(int flightId) {
         this.flightId = flightId;
     }

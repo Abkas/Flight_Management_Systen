@@ -6,6 +6,12 @@ import bcu.cmp5332.bookingsystem.model.Plane;
 import bcu.cmp5332.bookingsystem.model.FlightBookingSystem;
 import java.time.LocalDate;
 
+/**
+ * Command that adds a new flight to the system
+ * with route, date, plane and ticket prices.
+ *
+ * @author Abhis
+ */
 public class AddFlight implements Command {
 
     private final String flightNumber;
@@ -17,6 +23,18 @@ public class AddFlight implements Command {
     private final double businessPrice;
     private final double firstClassPrice;
 
+    /**
+     * Creates a new AddFlight command with all flight details.
+     *
+     * @param flightNumber    the flight number code
+     * @param origin          the starting airport
+     * @param destination     the destination airport
+     * @param departureDate   the departure date
+     * @param planeId         the id of the plane to use
+     * @param economyPrice    price for economy class
+     * @param businessPrice   price for business class
+     * @param firstClassPrice price for first class
+     */
     public AddFlight(String flightNumber, String origin, String destination, LocalDate departureDate, int planeId, double economyPrice, double businessPrice, double firstClassPrice) {
         this.flightNumber = flightNumber;
         this.origin = origin;

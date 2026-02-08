@@ -5,10 +5,21 @@ import bcu.cmp5332.bookingsystem.model.Customer;
 import bcu.cmp5332.bookingsystem.model.Flight;
 import bcu.cmp5332.bookingsystem.model.FlightBookingSystem;
 
+/**
+ * Command that lets the user cancel one of a
+ * customer's active bookings using a small menu.
+ *
+ * @author Abhis
+ */
 public class CancelBooking implements Command {
 
     private final int customerId;
 
+    /**
+     * Creates a new CancelBooking command.
+     *
+     * @param customerId the id of the customer
+     */
     public CancelBooking(int customerId) {
         this.customerId = customerId;
     }

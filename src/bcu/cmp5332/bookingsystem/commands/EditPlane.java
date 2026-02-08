@@ -4,6 +4,12 @@ import bcu.cmp5332.bookingsystem.main.FlightBookingSystemException;
 import bcu.cmp5332.bookingsystem.model.Plane;
 import bcu.cmp5332.bookingsystem.model.FlightBookingSystem;
 
+/**
+ * Command that edits an existing plane in the system,
+ * including model, registration and seating layout.
+ *
+ * @author Abhis
+ */
 public class EditPlane implements Command {
 
     private final int planeId;
@@ -13,6 +19,19 @@ public class EditPlane implements Command {
     private final int busRows, busCols;
     private final int fstRows, fstCols;
 
+    /**
+     * Creates a new EditPlane command.
+     *
+     * @param planeId           the id of the plane to edit
+     * @param model             new model name (or empty to keep old)
+     * @param registrationNumber new registration code (or empty to keep old)
+     * @param ecoRows           new economy rows (or &lt; 0 to keep old)
+     * @param ecoCols           new economy columns (or &lt; 0 to keep old)
+     * @param busRows           new business rows (or &lt; 0 to keep old)
+     * @param busCols           new business columns (or &lt; 0 to keep old)
+     * @param fstRows           new first rows (or &lt; 0 to keep old)
+     * @param fstCols           new first columns (or &lt; 0 to keep old)
+     */
     public EditPlane(int planeId, String model, String registrationNumber,
                      int ecoRows, int ecoCols, int busRows, int busCols, int fstRows, int fstCols) {
         this.planeId = planeId;

@@ -8,12 +8,28 @@ import bcu.cmp5332.bookingsystem.model.Flight;
 import bcu.cmp5332.bookingsystem.model.FlightBookingSystem;
 import java.time.LocalDate;
 
+/**
+ * Command that creates one or more bookings for a
+ * customer on a given flight and booking class.
+ *
+ * Shows a simple seat map so the user can pick
+ * seat numbers from the console.
+ *
+ * @author Abhis
+ */
 public class AddBooking implements Command {
 
     private final int customerId;
     private final int flightId;
     private final BookingClass bookingClass;
 
+    /**
+     * Creates a new AddBooking command.
+     *
+     * @param customerId   the id of the customer
+     * @param flightId     the id of the flight
+     * @param bookingClass the booking class to use
+     */
     public AddBooking(int customerId, int flightId, BookingClass bookingClass) {
         this.customerId = customerId;
         this.flightId = flightId;

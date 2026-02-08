@@ -6,6 +6,12 @@ import bcu.cmp5332.bookingsystem.model.Flight;
 import bcu.cmp5332.bookingsystem.model.Plane;
 import java.time.LocalDate;
 
+/**
+ * Command that updates details of an existing flight,
+ * including route, date, plane and ticket prices.
+ *
+ * @author Abhis
+ */
 public class EditFlight implements Command {
 
     private final int flightId;
@@ -18,6 +24,19 @@ public class EditFlight implements Command {
     private final double businessPrice;
     private final double firstClassPrice;
 
+    /**
+     * Creates a new EditFlight command.
+     *
+     * @param flightId        the id of the flight to edit
+     * @param flightNumber    new flight number (or empty to keep old)
+     * @param origin          new origin (or empty to keep old)
+     * @param destination     new destination (or empty to keep old)
+     * @param departureDate   new departure date (or null to keep old)
+     * @param planeId         id of new plane (or &lt;= 0 to keep old)
+     * @param economyPrice    new economy price (or &lt; 0 to keep old)
+     * @param businessPrice   new business price (or &lt; 0 to keep old)
+     * @param firstClassPrice new first class price (or &lt; 0 to keep old)
+     */
     public EditFlight(int flightId, String flightNumber, String origin, String destination, LocalDate departureDate, int planeId, double economyPrice, double businessPrice, double firstClassPrice) {
         this.flightId = flightId;
         this.flightNumber = flightNumber;
