@@ -1,5 +1,7 @@
 package bcu.cmp5332.bookingsystem.gui;
 
+import bcu.cmp5332.bookingsystem.commands.EditFlight;
+import bcu.cmp5332.bookingsystem.main.FlightBookingSystemException;
 import bcu.cmp5332.bookingsystem.model.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -16,12 +18,7 @@ public class EditFlightWindow extends JFrame implements ActionListener {
     private JTextField originText = new JTextField();
     private JTextField destinationText = new JTextField();
     private JTextField departureDateText = new JTextField();
-    private JTextField ecoRowsText = new JTextField();
-    private JTextField ecoColsText = new JTextField();
-    private JTextField busRowsText = new JTextField();
-    private JTextField busColsText = new JTextField();
-    private JTextField fstRowsText = new JTextField();
-    private JTextField fstColsText = new JTextField();
+    private JComboBox<Plane> planeCombo;
 
     private JButton updateBtn = new JButton("Update");
     private JButton cancelBtn = new JButton("Cancel");
@@ -38,7 +35,7 @@ public class EditFlightWindow extends JFrame implements ActionListener {
         }
 
         setTitle("Edit Flight");
-        setSize(550, 520);
+        setSize(550, 380);
 
         JPanel contentPanel = new JPanel(new BorderLayout(10, 10));
         contentPanel.setBorder(new EmptyBorder(15, 15, 15, 15));
@@ -49,7 +46,7 @@ public class EditFlightWindow extends JFrame implements ActionListener {
 
         JPanel formPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 8, 5, 8);
+        gbc.insets = new Insets(8, 10, 8, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridy = 0;
 
@@ -72,17 +69,15 @@ public class EditFlightWindow extends JFrame implements ActionListener {
         gbc.gridx = 0;
         formPanel.add(new JLabel("Select Flight:", SwingConstants.RIGHT), gbc);
         gbc.gridx = 1;
-        gbc.gridwidth = 3;
-        flightCombo.setPreferredSize(new Dimension(280, 26));
+        flightCombo.setPreferredSize(new Dimension(300, 28));
         formPanel.add(flightCombo, gbc);
-        gbc.gridwidth = 1;
 
         JLabel infoLabel = new JLabel("(Leave blank to keep current value)", SwingConstants.CENTER);
         infoLabel.setFont(infoLabel.getFont().deriveFont(Font.ITALIC, 11f));
         infoLabel.setForeground(Color.GRAY);
         gbc.gridy++;
         gbc.gridx = 0;
-        gbc.gridwidth = 4;
+        gbc.gridwidth = 2;
         formPanel.add(infoLabel, gbc);
         gbc.gridwidth = 1;
 
@@ -92,19 +87,26 @@ public class EditFlightWindow extends JFrame implements ActionListener {
         addFormRow(formPanel, gbc, "New Destination:", destinationText);
         addFormRow(formPanel, gbc, "New Date (YYYY-MM-DD):", departureDateText);
 
-        // Seating section header
+        // Plane selection
+        java.util.List<Plane> planes = fbs.getPlanes();
+        planeCombo = new JComboBox<>(planes.toArray(new Plane[0]));
+        planeCombo.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                if (value instanceof Plane) {
+                    Plane p = (Plane) value;
+                    value = p.getId() + " - " + p.getModel() + " (" + p.getRegistrationNumber() + ")";
+                }
+                return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+            }
+        });
+        planeCombo.setPreferredSize(new Dimension(300, 28));
+        
         gbc.gridy++;
         gbc.gridx = 0;
-        gbc.gridwidth = 4;
-        JLabel seatHeader = new JLabel("Seat Configuration (enter -1 to keep current):", SwingConstants.LEFT);
-        seatHeader.setFont(seatHeader.getFont().deriveFont(Font.BOLD, 12f));
-        formPanel.add(seatHeader, gbc);
-        gbc.gridwidth = 1;
-
-        // Seating rows
-        addSeatRow(formPanel, gbc, "Economy:", ecoRowsText, ecoColsText);
-        addSeatRow(formPanel, gbc, "Business:", busRowsText, busColsText);
-        addSeatRow(formPanel, gbc, "First Class:", fstRowsText, fstColsText);
+        formPanel.add(new JLabel("New Aircraft:", SwingConstants.RIGHT), gbc);
+        gbc.gridx = 1;
+        formPanel.add(planeCombo, gbc);
 
         JScrollPane scrollPane = new JScrollPane(formPanel);
         scrollPane.setBorder(null);
@@ -132,26 +134,8 @@ public class EditFlightWindow extends JFrame implements ActionListener {
         gbc.gridx = 0;
         panel.add(new JLabel(label, SwingConstants.RIGHT), gbc);
         gbc.gridx = 1;
-        gbc.gridwidth = 3;
-        field.setPreferredSize(new Dimension(200, 26));
+        field.setPreferredSize(new Dimension(300, 28));
         panel.add(field, gbc);
-        gbc.gridwidth = 1;
-    }
-
-    private void addSeatRow(JPanel panel, GridBagConstraints gbc, String label, JTextField rowsField, JTextField colsField) {
-        gbc.gridy++;
-        gbc.gridx = 0;
-        panel.add(new JLabel(label, SwingConstants.RIGHT), gbc);
-        gbc.gridx = 1;
-        panel.add(new JLabel("Rows:", SwingConstants.RIGHT), gbc);
-        gbc.gridx = 2;
-        rowsField.setPreferredSize(new Dimension(60, 26));
-        panel.add(rowsField, gbc);
-        gbc.gridx = 3;
-        panel.add(new JLabel("Cols:", SwingConstants.RIGHT), gbc);
-        gbc.gridx = 4;
-        colsField.setPreferredSize(new Dimension(60, 26));
-        panel.add(colsField, gbc);
     }
 
     private void loadFlightData() {
@@ -161,12 +145,12 @@ public class EditFlightWindow extends JFrame implements ActionListener {
             originText.setToolTipText("Current: " + f.getOrigin());
             destinationText.setToolTipText("Current: " + f.getDestination());
             departureDateText.setToolTipText("Current: " + f.getDepartureDate());
-            ecoRowsText.setToolTipText("Current: " + f.getEconomyRows());
-            ecoColsText.setToolTipText("Current: " + f.getEconomyColumns());
-            busRowsText.setToolTipText("Current: " + f.getBusinessRows());
-            busColsText.setToolTipText("Current: " + f.getBusinessColumns());
-            fstRowsText.setToolTipText("Current: " + f.getFirstRows());
-            fstColsText.setToolTipText("Current: " + f.getFirstColumns());
+            
+            // Set current plane as selected
+            if (f.getPlane() != null) {
+                planeCombo.setSelectedItem(f.getPlane());
+                planeCombo.setToolTipText("Current: " + f.getPlane().getModel() + " (" + f.getPlane().getRegistrationNumber() + ")");
+            }
         }
     }
 
@@ -191,44 +175,29 @@ public class EditFlightWindow extends JFrame implements ActionListener {
             String origin = originText.getText().trim();
             String destination = destinationText.getText().trim();
             String dateStr = departureDateText.getText().trim();
-
-            if (!flightNumber.isEmpty()) flight.setFlightNumber(flightNumber);
-            if (!origin.isEmpty()) flight.setOrigin(origin);
-            if (!destination.isEmpty()) flight.setDestination(destination);
+            
+            LocalDate departureDate = null;
             if (!dateStr.isEmpty()) {
                 try {
-                    LocalDate date = LocalDate.parse(dateStr);
-                    flight.setDepartureDate(date);
+                    departureDate = LocalDate.parse(dateStr);
                 } catch (DateTimeParseException e) {
                     JOptionPane.showMessageDialog(this, "Date must be in YYYY-MM-DD format.", "Error", JOptionPane.WARNING_MESSAGE);
                     return;
                 }
             }
 
-            // Update seating
-            updateSeatField(ecoRowsText, v -> flight.setEconomyRows(v));
-            updateSeatField(ecoColsText, v -> flight.setEconomyColumns(v));
-            updateSeatField(busRowsText, v -> flight.setBusinessRows(v));
-            updateSeatField(busColsText, v -> flight.setBusinessColumns(v));
-            updateSeatField(fstRowsText, v -> flight.setFirstRows(v));
-            updateSeatField(fstColsText, v -> flight.setFirstColumns(v));
+            // Get selected plane (0 means no change in EditFlight command)
+            Plane selectedPlane = (Plane) planeCombo.getSelectedItem();
+            int planeId = (selectedPlane != null) ? selectedPlane.getId() : 0;
+
+            EditFlight command = new EditFlight(flight.getId(), flightNumber, origin, destination, departureDate, planeId);
+            command.execute(mw.getFlightBookingSystem());
 
             JOptionPane.showMessageDialog(this, "Flight updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             this.setVisible(false);
             mw.refreshFlightsPanel();
-        } catch (Exception ex) {
+        } catch (FlightBookingSystemException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    private void updateSeatField(JTextField field, java.util.function.IntConsumer setter) {
-        String val = field.getText().trim();
-        if (!val.isEmpty()) {
-            try {
-                int v = Integer.parseInt(val);
-                if (v >= 0) setter.accept(v);
-            } catch (NumberFormatException ignored) {
-            }
         }
     }
 }
