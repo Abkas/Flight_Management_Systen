@@ -6,6 +6,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.net.URL;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
@@ -44,6 +46,16 @@ public class MainWindow extends JFrame implements ActionListener {
         setSize(1200, 700);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
+        
+        // Set custom icon from image file (no drawn fallback)
+        try {
+            Image icon = loadIconImage();
+            if (icon != null) {
+                setIconImage(icon);
+            }
+        } catch (Exception e) {
+            // If icon loading fails, continue without icon
+        }
 
         // Create sidebar
         createSidebar();
@@ -70,7 +82,7 @@ public class MainWindow extends JFrame implements ActionListener {
         sidebarPanel.setBorder(new EmptyBorder(20, 15, 20, 15));
 
         // Title
-        JLabel titleLabel = new JLabel("Flight Booking System");
+        JLabel titleLabel = new JLabel("Flight Management System");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
         titleLabel.setForeground(Color.WHITE);
         titleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -227,5 +239,30 @@ public class MainWindow extends JFrame implements ActionListener {
             }
             System.exit(0);
         }   
+    }
+    
+    /**
+     * Try to load an icon image from the classpath.
+     *
+     * This will first look for /icon.png at the classpath root
+     * (e.g. resources/icon.png marked as a source folder in Eclipse),
+     * and then for icon.png in the same package as MainWindow
+     * (bcu/cmp5332/bookingsystem/gui/icon.png).
+     */
+    private Image loadIconImage() {
+        try {
+            // 1) Try classpath root: /icon.png
+            URL iconUrl = getClass().getResource("/icon.png");
+            if (iconUrl == null) {
+                // 2) Try alongside MainWindow in the gui package
+                iconUrl = getClass().getResource("/bcu/cmp5332/bookingsystem/gui/icon.png");
+            }
+            if (iconUrl != null) {
+                return ImageIO.read(iconUrl);
+            }
+        } catch (IOException ex) {
+            // Ignore and continue without icon
+        }
+        return null;
     }
 }
