@@ -183,6 +183,13 @@ public class MainWindow extends JFrame implements ActionListener {
         contentPanel.repaint();
     }
     
+    public void showFlightDetail(bcu.cmp5332.bookingsystem.model.Flight flight) {
+        contentPanel.removeAll();
+        contentPanel.add(new FlightDetailPanel(this, flight));
+        contentPanel.revalidate();
+        contentPanel.repaint();
+    }
+    
     public void refreshFlightsPanel() {
         showFlightsPanel();
     }

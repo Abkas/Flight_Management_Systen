@@ -158,10 +158,12 @@ public class AddBookingWindow extends JFrame implements ActionListener {
                 return;
             }
 
+            double priceForClass = flight.getPrice(bookingClass);
+            
             for (String seat : requestedSeats) {
                 Booking booking = new Booking(customer, flight,
                         mw.getFlightBookingSystem().getSystemDate(),
-                        bookingClass, seat);
+                        bookingClass, seat, priceForClass);
                 customer.addBooking(booking);
                 flight.addPassenger(customer);
             }
