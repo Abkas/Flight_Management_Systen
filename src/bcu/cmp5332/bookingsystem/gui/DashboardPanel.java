@@ -22,8 +22,8 @@ public class DashboardPanel extends JPanel {
         setBackground(new Color(240, 240, 245));
         setBorder(new EmptyBorder(30, 30, 30, 30));
         
-        JLabel headerLabel = new JLabel("Dashboard Overview");
-        headerLabel.setFont(new Font("Arial", Font.BOLD, 32));
+        JLabel headerLabel = new JLabel("📊 Dashboard Overview");
+        headerLabel.setFont(new Font("Segoe UI Emoji", Font.BOLD, 32));
         headerLabel.setForeground(new Color(44, 62, 80));
         add(headerLabel, BorderLayout.NORTH);
         
@@ -37,9 +37,9 @@ public class DashboardPanel extends JPanel {
             totalBookings += customer.getBookings().size();
         }
         
-        statsPanel.add(createStatCard("Total Flights", String.valueOf(totalFlights), new Color(52, 152, 219)));
-        statsPanel.add(createStatCard("Total Customers", String.valueOf(totalCustomers), new Color(155, 89, 182)));
-        statsPanel.add(createStatCard("Total Bookings", String.valueOf(totalBookings), new Color(230, 126, 34)));
+        statsPanel.add(createStatCard("✈️ Total Flights", String.valueOf(totalFlights), new Color(52, 152, 219)));
+        statsPanel.add(createStatCard("👥 Total Customers", String.valueOf(totalCustomers), new Color(155, 89, 182)));
+        statsPanel.add(createStatCard("🎫 Total Bookings", String.valueOf(totalBookings), new Color(230, 126, 34)));
         
         add(statsPanel, BorderLayout.CENTER);
         
@@ -73,7 +73,7 @@ public class DashboardPanel extends JPanel {
         textPanel.setBackground(Color.WHITE);
         
         JLabel titleLabel = new JLabel(title);
-        titleLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        titleLabel.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 16));
         titleLabel.setForeground(new Color(127, 140, 141));
         
         JLabel valueLabel = new JLabel(value);

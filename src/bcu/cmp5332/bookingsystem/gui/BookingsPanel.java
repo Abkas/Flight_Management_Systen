@@ -30,8 +30,8 @@ public class BookingsPanel extends JPanel {
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setBackground(new Color(240, 240, 245));
         
-        JLabel headerLabel = new JLabel("Bookings Management");
-        headerLabel.setFont(new Font("Arial", Font.BOLD, 28));
+        JLabel headerLabel = new JLabel("🎫 Bookings Management");
+        headerLabel.setFont(new Font("Segoe UI Emoji", Font.BOLD, 28));
         headerLabel.setForeground(new Color(44, 62, 80));
         
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));

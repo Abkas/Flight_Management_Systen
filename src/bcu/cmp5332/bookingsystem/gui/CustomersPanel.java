@@ -25,8 +25,8 @@ public class CustomersPanel extends JPanel {
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setBackground(new Color(240, 240, 245));
         
-        JLabel headerLabel = new JLabel("Customers Management");
-        headerLabel.setFont(new Font("Arial", Font.BOLD, 28));
+        JLabel headerLabel = new JLabel("👥 Customers Management");
+        headerLabel.setFont(new Font("Segoe UI Emoji", Font.BOLD, 28));
         headerLabel.setForeground(new Color(44, 62, 80));
         
         JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
@@ -101,7 +101,7 @@ public class CustomersPanel extends JPanel {
         topPanel.setBackground(Color.WHITE);
         
         JLabel iconLabel = new JLabel("👤");
-        iconLabel.setFont(new Font("Arial", Font.PLAIN, 32));
+        iconLabel.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 32));
         
         JLabel idLabel = new JLabel("#" + customer.getId());
         idLabel.setFont(new Font("Arial", Font.BOLD, 14));
@@ -119,16 +119,6 @@ public class CustomersPanel extends JPanel {
         nameLabel.setFont(new Font("Arial", Font.BOLD, 18));
         nameLabel.setForeground(new Color(44, 62, 80));
         
-        JLabel phoneLabel = new JLabel("📱 " + customer.getPhone());
-        phoneLabel.setFont(new Font("Arial", Font.PLAIN, 13));
-        phoneLabel.setForeground(new Color(52, 73, 94));
-        
-        String email = customer.getEmail() != null && !customer.getEmail().isEmpty() 
-            ? customer.getEmail() : "No email";
-        JLabel emailLabel = new JLabel("✉️ " + email);
-        emailLabel.setFont(new Font("Arial", Font.PLAIN, 13));
-        emailLabel.setForeground(new Color(52, 73, 94));
-        
         String demographics = "";
         if (customer.getGender() != null && !customer.getGender().isEmpty()) {
             demographics += customer.getGender();
@@ -137,14 +127,26 @@ public class CustomersPanel extends JPanel {
             demographics += (demographics.isEmpty() ? "" : ", ") + customer.getAge() + " yrs";
         }
         if (!demographics.isEmpty()) {
-            JLabel demoLabel = new JLabel("👥 " + demographics);
+            JLabel demoLabel = new JLabel(demographics);
             demoLabel.setFont(new Font("Arial", Font.PLAIN, 13));
-            demoLabel.setForeground(new Color(52, 73, 94));
+            demoLabel.setForeground(new Color(95, 95, 95));
             infoPanel.add(demoLabel);
+            infoPanel.add(Box.createRigidArea(new Dimension(0, 5)));
         }
         
         infoPanel.add(nameLabel);
         infoPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+        
+        JLabel phoneLabel = new JLabel(customer.getPhone());
+        phoneLabel.setFont(new Font("Arial", Font.PLAIN, 13));
+        phoneLabel.setForeground(new Color(52, 73, 94));
+        
+        String email = customer.getEmail() != null && !customer.getEmail().isEmpty() 
+            ? customer.getEmail() : "No email";
+        JLabel emailLabel = new JLabel(email);
+        emailLabel.setFont(new Font("Arial", Font.PLAIN, 13));
+        emailLabel.setForeground(new Color(52, 73, 94));
+        
         infoPanel.add(phoneLabel);
         infoPanel.add(Box.createRigidArea(new Dimension(0, 3)));
         infoPanel.add(emailLabel);

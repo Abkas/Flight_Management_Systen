@@ -110,13 +110,13 @@ public class PlaneDetailPanel extends JPanel {
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
         leftPanel.setOpaque(false);
         
-        JLabel iconLabel = new JLabel("✈");
-        iconLabel.setFont(new Font("Arial", Font.PLAIN, 80));
+        JLabel iconLabel = new JLabel("✈️");
+        iconLabel.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 80));
         iconLabel.setForeground(new Color(52, 152, 219));
         iconLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         
-        JLabel idLabel = new JLabel("Aircraft #" + plane.getId());
-        idLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        JLabel idLabel = new JLabel("✈️ Aircraft #" + plane.getId());
+        idLabel.setFont(new Font("Segoe UI Emoji", Font.BOLD, 16));
         idLabel.setForeground(new Color(149, 165, 166));
         idLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         

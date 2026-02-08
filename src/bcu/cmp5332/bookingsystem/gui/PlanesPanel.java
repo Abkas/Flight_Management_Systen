@@ -25,8 +25,8 @@ public class PlanesPanel extends JPanel {
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setBackground(new Color(240, 240, 245));
         
-        JLabel headerLabel = new JLabel("Aircraft Fleet");
-        headerLabel.setFont(new Font("Arial", Font.BOLD, 28));
+        JLabel headerLabel = new JLabel("✈️ Aircraft Fleet");
+        headerLabel.setFont(new Font("Segoe UI Emoji", Font.BOLD, 28));
         headerLabel.setForeground(new Color(44, 62, 80));
         
         JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
@@ -102,8 +102,8 @@ public class PlanesPanel extends JPanel {
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.setOpaque(false);
         
-        JLabel iconLabel = new JLabel("✈");
-        iconLabel.setFont(new Font("Arial", Font.PLAIN, 40));
+        JLabel iconLabel = new JLabel("✈️");
+        iconLabel.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 40));
         iconLabel.setForeground(new Color(52, 152, 219));
         
         JLabel idLabel = new JLabel("#" + plane.getId());

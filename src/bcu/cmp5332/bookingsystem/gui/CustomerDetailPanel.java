@@ -82,7 +82,7 @@ public class CustomerDetailPanel extends JPanel {
         
         // Icon and ID
         JLabel icon = new JLabel("👤");
-        icon.setFont(new Font("Arial", Font.PLAIN, 48));
+        icon.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 48));
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridheight = 3;
@@ -92,8 +92,8 @@ public class CustomerDetailPanel extends JPanel {
         gbc.gridx = 1;
         gbc.gridy = 0;
         
-        JLabel idLabel = new JLabel("Customer #" + customer.getId());
-        idLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        JLabel idLabel = new JLabel("👤 Customer #" + customer.getId());
+        idLabel.setFont(new Font("Segoe UI Emoji", Font.BOLD, 24));
         idLabel.setForeground(new Color(44, 62, 80));
         card.add(idLabel, gbc);
         
@@ -134,7 +134,7 @@ public class CustomerDetailPanel extends JPanel {
         gbc.gridwidth = 1;
         
         JLabel labelComp = new JLabel(label);
-        labelComp.setFont(new Font("Arial", Font.BOLD, 14));
+        labelComp.setFont(new Font("Segoe UI Emoji", Font.BOLD, 14));
         labelComp.setForeground(new Color(127, 140, 141));
         panel.add(labelComp, gbc);
         
