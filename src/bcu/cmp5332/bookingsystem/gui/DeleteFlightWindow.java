@@ -7,6 +7,11 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+/**
+ * Dialog window in the GUI for deleting a flight after selecting it from the list.
+ * 
+ * @author Abhis
+ */
 public class DeleteFlightWindow extends JFrame implements ActionListener {
 
     private MainWindow mw;

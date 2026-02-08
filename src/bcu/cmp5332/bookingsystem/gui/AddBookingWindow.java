@@ -9,6 +9,11 @@ import java.util.LinkedHashSet;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+/**
+ * Dialog window in the GUI for creating a new booking with seat selection.
+ * 
+ * @author Abhis
+ */
 public class AddBookingWindow extends JFrame implements ActionListener {
 
     private MainWindow mw;

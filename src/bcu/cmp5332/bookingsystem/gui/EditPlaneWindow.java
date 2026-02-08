@@ -8,6 +8,11 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+/**
+ * Dialog window in the GUI for updating an existing aircraft and its seat map.
+ * 
+ * @author Abhis
+ */
 public class EditPlaneWindow extends JFrame implements ActionListener {
 
     private MainWindow mw;

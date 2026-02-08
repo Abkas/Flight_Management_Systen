@@ -8,6 +8,11 @@ import java.util.Set;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+/**
+ * Dialog window in the GUI for changing an existing booking, including seat and class.
+ * 
+ * @author Abhis
+ */
 public class EditBookingWindow extends JFrame implements ActionListener {
 
     private MainWindow mw;

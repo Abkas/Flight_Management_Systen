@@ -20,6 +20,11 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 
+/**
+ * Dialog window in the GUI for creating a new customer.
+ * 
+ * @author Abhis
+ */
 public class AddCustomerWindow extends JFrame implements ActionListener {
 
     private MainWindow mw;

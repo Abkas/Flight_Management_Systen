@@ -21,6 +21,11 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 
+/**
+ * Dialog window in the GUI for creating a new aircraft with seat layout.
+ * 
+ * @author Abhis
+ */
 public class AddPlaneWindow extends JFrame implements ActionListener {
 
     private MainWindow mw;

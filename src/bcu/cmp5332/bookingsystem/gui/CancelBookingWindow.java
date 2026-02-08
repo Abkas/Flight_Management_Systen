@@ -7,6 +7,11 @@ import java.awt.event.*;
 import java.util.List;
 import javax.swing.*;
 
+/**
+ * Dialog window in the GUI for cancelling an existing booking for a customer.
+ * 
+ * @author Abhis
+ */
 public class CancelBookingWindow extends JFrame implements ActionListener {
 
     private MainWindow mw;

@@ -9,6 +9,11 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+/**
+ * Dashboard panel that shows key stats, upcoming flights and quick actions in the GUI.
+ * 
+ * @author Abhis
+ */
 public class DashboardPanel extends JPanel {
     
     private MainWindow mw;

@@ -6,6 +6,11 @@ import java.time.format.DateTimeFormatter;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+/**
+ * Detailed view panel in the GUI for a single customer and their bookings.
+ * 
+ * @author Abhis
+ */
 public class CustomerDetailPanel extends JPanel {
     
     private MainWindow mw;

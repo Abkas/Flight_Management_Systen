@@ -10,6 +10,11 @@ import java.time.format.DateTimeParseException;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+/**
+ * Dialog window in the GUI for updating an existing flight and its prices.
+ * 
+ * @author Abhis
+ */
 public class EditFlightWindow extends JFrame implements ActionListener {
 
     private MainWindow mw;

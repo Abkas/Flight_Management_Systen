@@ -28,6 +28,11 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 
+/**
+ * Dialog window in the GUI for creating a new flight and setting prices.
+ * 
+ * @author Abhis
+ */
 public class AddFlightWindow extends JFrame implements ActionListener {
 
     private MainWindow mw;

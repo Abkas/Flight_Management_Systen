@@ -6,6 +6,11 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+/**
+ * Dialog window in the GUI for updating an existing customer's details.
+ * 
+ * @author Abhis
+ */
 public class EditCustomerWindow extends JFrame implements ActionListener {
 
     private MainWindow mw;

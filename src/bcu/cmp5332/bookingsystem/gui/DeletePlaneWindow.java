@@ -7,6 +7,11 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+/**
+ * Dialog window in the GUI for deleting an aircraft from the fleet.
+ * 
+ * @author Abhis
+ */
 public class DeletePlaneWindow extends JFrame implements ActionListener {
 
     private MainWindow mw;

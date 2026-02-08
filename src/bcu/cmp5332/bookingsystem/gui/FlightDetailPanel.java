@@ -8,6 +8,11 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.util.Set;
 
+/**
+ * Detailed view panel in the GUI for a single flight, seats and prices.
+ * 
+ * @author Abhis
+ */
 public class FlightDetailPanel extends JPanel {
     
     private MainWindow mw;

@@ -6,6 +6,11 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+/**
+ * Panel in the GUI that shows the aircraft fleet with options to add and manage planes.
+ * 
+ * @author Abhis
+ */
 public class PlanesPanel extends JPanel {
     
     private MainWindow mw;

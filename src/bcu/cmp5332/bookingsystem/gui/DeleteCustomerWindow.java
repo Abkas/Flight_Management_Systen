@@ -7,6 +7,11 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+/**
+ * Dialog window in the GUI for deleting a customer and confirming the action.
+ * 
+ * @author Abhis
+ */
 public class DeleteCustomerWindow extends JFrame implements ActionListener {
 
     private MainWindow mw;

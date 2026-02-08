@@ -6,6 +6,12 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+/**
+ * GUI panel that shows all flights as cards and
+ * provides a button to open the AddFlight window.
+ *
+ * @author Abhis
+ */
 public class FlightsPanel extends JPanel {
     
     private MainWindow mw;

@@ -9,6 +9,11 @@ import javax.swing.border.EmptyBorder;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Detailed view panel in the GUI for a single aircraft and its flights.
+ * 
+ * @author Abhis
+ */
 public class PlaneDetailPanel extends JPanel {
     
     private MainWindow mw;
