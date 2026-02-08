@@ -54,8 +54,13 @@ public class BookingsPanel extends JPanel {
         
         String[] columns = {"ID", "Customer", "Flight", "Date", "Class", "Seat"};
         List<Booking> allBookings = new ArrayList<>();
+        // Only show non-cancelled bookings
         for (Customer c : fbs.getCustomers()) {
-            allBookings.addAll(c.getBookings());
+            for (Booking b : c.getBookings()) {
+                if (!b.isCancelled()) {
+                    allBookings.add(b);
+                }
+            }
         }
         
         Object[][] data = new Object[allBookings.size()][6];

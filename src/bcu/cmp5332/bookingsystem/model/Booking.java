@@ -9,13 +9,17 @@ public class Booking {
     private LocalDate bookingDate;
     private BookingClass bookingClass;
     private String seatNumber;
+    private double bookedPrice;
+    private boolean cancelled;
 
-    public Booking(Customer customer, Flight flight, LocalDate bookingDate, BookingClass bookingClass, String seatNumber) {
+    public Booking(Customer customer, Flight flight, LocalDate bookingDate, BookingClass bookingClass, String seatNumber, double bookedPrice) {
         this.customer = customer;
         this.flight = flight;
         this.bookingDate = bookingDate;
         this.bookingClass = bookingClass;
         this.seatNumber = seatNumber;
+        this.bookedPrice = bookedPrice;
+        this.cancelled = false;
     }
     
     public Customer getCustomer(){
@@ -42,9 +46,12 @@ public class Booking {
         this.bookingDate = bookingDate;
     }
 
-    // Check cancellation - if logic changes to soft delete later
     public boolean isCancelled() {
-        return false; 
+        return cancelled;
+    }
+
+    public void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
     }
 
     public String getSeatNumber() {
@@ -61,5 +68,13 @@ public class Booking {
 
     public void setBookingClass(BookingClass bookingClass) {
         this.bookingClass = bookingClass;
+    }
+
+    public double getBookedPrice() {
+        return bookedPrice;
+    }
+
+    public void setBookedPrice(double bookedPrice) {
+        this.bookedPrice = bookedPrice;
     }
 }

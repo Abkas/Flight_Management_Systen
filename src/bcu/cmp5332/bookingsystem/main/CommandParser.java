@@ -24,8 +24,11 @@ public class CommandParser {
                 LocalDate departureDate = parseDateWithAttempts(reader);
                 
                 int planeId = readIntWithValidation(reader, "Plane ID: ");
+                double economyPrice = readDoubleWithValidation(reader, "Economy Price (NPR): ");
+                double businessPrice = readDoubleWithValidation(reader, "Business Price (NPR): ");
+                double firstClassPrice = readDoubleWithValidation(reader, "First Class Price (NPR): ");
 
-                return new AddFlight(flighNumber, origin, destination, departureDate, planeId);
+                return new AddFlight(flighNumber, origin, destination, departureDate, planeId, economyPrice, businessPrice, firstClassPrice);
             } else if (cmd.equals("addcustomer")) {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
                 String name = readStringWithValidation(reader, "Customer Name: ");
@@ -92,7 +95,10 @@ public class CommandParser {
                 String destination = readStringOptional(reader, "New Destination: ");
                 LocalDate departureDate = parseDateOptional(reader, "New Departure Date (YYYY-MM-DD, blank to skip): ");
                 int planeId = readIntOptional(reader, "New Plane ID (0 to skip): ");
-                return new EditFlight(flightId, flightNumber, origin, destination, departureDate, planeId);
+                double economyPrice = readDoubleOptional(reader, "New Economy Price (-1 to skip): ");
+                double businessPrice = readDoubleOptional(reader, "New Business Price (-1 to skip): ");
+                double firstClassPrice = readDoubleOptional(reader, "New First Class Price (-1 to skip): ");
+                return new EditFlight(flightId, flightNumber, origin, destination, departureDate, planeId, economyPrice, businessPrice, firstClassPrice);
             } else if (cmd.equals("deleteflight")) {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
                 int flightId = readIntWithValidation(reader, "Flight ID to delete: ");
@@ -230,11 +236,40 @@ public class CommandParser {
         }
     }
 
+    private static double readDoubleOptional(BufferedReader reader, String prompt) throws IOException {
+        System.out.print(prompt);
+        String input = reader.readLine();
+        if (input == null || input.trim().isEmpty()) {
+            return -1.0;  // -1 means "skip, keep current value"
+        }
+        try {
+            return Double.parseDouble(input.trim());
+        } catch (NumberFormatException e) {
+            return -1.0;
+        }
+    }
+
     private static int readIntWithValidation(BufferedReader reader, String prompt) throws IOException {
         while (true) {
             String input = readStringWithValidation(reader, prompt);
             try {
                 return Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid number. Please enter a numeric value.");
+            }
+        }
+    }
+    
+    private static double readDoubleWithValidation(BufferedReader reader, String prompt) throws IOException {
+        while (true) {
+            String input = readStringWithValidation(reader, prompt);
+            try {
+                double value = Double.parseDouble(input);
+                if (value < 0) {
+                    System.out.println("Price must be a positive number.");
+                    continue;
+                }
+                return value;
             } catch (NumberFormatException e) {
                 System.out.println("Invalid number. Please enter a numeric value.");
             }

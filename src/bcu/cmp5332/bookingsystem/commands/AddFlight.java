@@ -13,13 +13,19 @@ public class AddFlight implements Command {
     private final String destination;
     private final LocalDate departureDate;
     private final int planeId;
+    private final double economyPrice;
+    private final double businessPrice;
+    private final double firstClassPrice;
 
-    public AddFlight(String flightNumber, String origin, String destination, LocalDate departureDate, int planeId) {
+    public AddFlight(String flightNumber, String origin, String destination, LocalDate departureDate, int planeId, double economyPrice, double businessPrice, double firstClassPrice) {
         this.flightNumber = flightNumber;
         this.origin = origin;
         this.destination = destination;
         this.departureDate = departureDate;
         this.planeId = planeId;
+        this.economyPrice = economyPrice;
+        this.businessPrice = businessPrice;
+        this.firstClassPrice = firstClassPrice;
     }
     
     @Override
@@ -32,9 +38,12 @@ public class AddFlight implements Command {
         
         Plane plane = flightBookingSystem.getPlaneByID(planeId);
         
-        Flight flight = new Flight(++maxId, flightNumber, origin, destination, departureDate, plane);
+        Flight flight = new Flight(++maxId, flightNumber, origin, destination, departureDate, plane, economyPrice, businessPrice, firstClassPrice);
         flightBookingSystem.addFlight(flight);
         System.out.println("Flight #" + flight.getId() + " added.");
+        System.out.println("Prices: Economy NPR " + String.format("%.2f", economyPrice) 
+            + ", Business NPR " + String.format("%.2f", businessPrice)
+            + ", First NPR " + String.format("%.2f", firstClassPrice));
         System.out.println("Aircraft: " + plane.getModel() + " (" + plane.getRegistrationNumber() + ")");
         System.out.println("Capacities: " 
             + "Economy(" + flight.getCapacity(bcu.cmp5332.bookingsystem.model.BookingClass.ECONOMY) + "), "

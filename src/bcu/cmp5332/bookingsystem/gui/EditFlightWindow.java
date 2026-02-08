@@ -18,6 +18,9 @@ public class EditFlightWindow extends JFrame implements ActionListener {
     private JTextField originText = new JTextField();
     private JTextField destinationText = new JTextField();
     private JTextField departureDateText = new JTextField();
+    private JTextField economyPriceText = new JTextField();
+    private JTextField businessPriceText = new JTextField();
+    private JTextField firstClassPriceText = new JTextField();
     private JComboBox<Plane> planeCombo;
 
     private JButton updateBtn = new JButton("Update");
@@ -35,7 +38,7 @@ public class EditFlightWindow extends JFrame implements ActionListener {
         }
 
         setTitle("Edit Flight");
-        setSize(550, 380);
+        setSize(550, 500);
 
         JPanel contentPanel = new JPanel(new BorderLayout(10, 10));
         contentPanel.setBorder(new EmptyBorder(15, 15, 15, 15));
@@ -86,6 +89,9 @@ public class EditFlightWindow extends JFrame implements ActionListener {
         addFormRow(formPanel, gbc, "New Origin:", originText);
         addFormRow(formPanel, gbc, "New Destination:", destinationText);
         addFormRow(formPanel, gbc, "New Date (YYYY-MM-DD):", departureDateText);
+        addFormRow(formPanel, gbc, "New Economy Price (NPR):", economyPriceText);
+        addFormRow(formPanel, gbc, "New Business Price (NPR):", businessPriceText);
+        addFormRow(formPanel, gbc, "New First Class Price (NPR):", firstClassPriceText);
 
         // Plane selection
         java.util.List<Plane> planes = fbs.getPlanes();
@@ -145,6 +151,9 @@ public class EditFlightWindow extends JFrame implements ActionListener {
             originText.setToolTipText("Current: " + f.getOrigin());
             destinationText.setToolTipText("Current: " + f.getDestination());
             departureDateText.setToolTipText("Current: " + f.getDepartureDate());
+            economyPriceText.setToolTipText("Current: NPR " + String.format("%.2f", f.getEconomyPrice()));
+            businessPriceText.setToolTipText("Current: NPR " + String.format("%.2f", f.getBusinessPrice()));
+            firstClassPriceText.setToolTipText("Current: NPR " + String.format("%.2f", f.getFirstClassPrice()));
             
             // Set current plane as selected
             if (f.getPlane() != null) {
@@ -186,11 +195,58 @@ public class EditFlightWindow extends JFrame implements ActionListener {
                 }
             }
 
+            // Parse prices (-1 means no change)
+            double economyPrice = -1.0;
+            double businessPrice = -1.0;
+            double firstClassPrice = -1.0;
+            
+            String ecoStr = economyPriceText.getText().trim();
+            if (!ecoStr.isEmpty()) {
+                try {
+                    economyPrice = Double.parseDouble(ecoStr);
+                    if (economyPrice < 0) {
+                        JOptionPane.showMessageDialog(this, "Economy price must be a positive number.", "Error", JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(this, "Please enter a valid economy price.", "Error", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+            }
+            
+            String busStr = businessPriceText.getText().trim();
+            if (!busStr.isEmpty()) {
+                try {
+                    businessPrice = Double.parseDouble(busStr);
+                    if (businessPrice < 0) {
+                        JOptionPane.showMessageDialog(this, "Business price must be a positive number.", "Error", JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(this, "Please enter a valid business price.", "Error", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+            }
+            
+            String fstStr = firstClassPriceText.getText().trim();
+            if (!fstStr.isEmpty()) {
+                try {
+                    firstClassPrice = Double.parseDouble(fstStr);
+                    if (firstClassPrice < 0) {
+                        JOptionPane.showMessageDialog(this, "First class price must be a positive number.", "Error", JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(this, "Please enter a valid first class price.", "Error", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+            }
+
             // Get selected plane (0 means no change in EditFlight command)
             Plane selectedPlane = (Plane) planeCombo.getSelectedItem();
             int planeId = (selectedPlane != null) ? selectedPlane.getId() : 0;
 
-            EditFlight command = new EditFlight(flight.getId(), flightNumber, origin, destination, departureDate, planeId);
+            EditFlight command = new EditFlight(flight.getId(), flightNumber, origin, destination, departureDate, planeId, economyPrice, businessPrice, firstClassPrice);
             command.execute(mw.getFlightBookingSystem());
 
             JOptionPane.showMessageDialog(this, "Flight updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);

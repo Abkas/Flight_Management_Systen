@@ -51,8 +51,32 @@ public class BookingDataManager implements DataManager {
                 if (parts.length >= 5) {
                     seatNumber = parts[4];
                 }
+                
+                double bookedPrice = 0.0;
+                // Load booked price if available (new 6th field)
+                if (parts.length >= 6 && !parts[5].isEmpty()) {
+                    try {
+                        bookedPrice = Double.parseDouble(parts[5]);
+                    } catch (NumberFormatException e) {
+                        // Default to flight's current price for this class if not found
+                        bookedPrice = flight.getPrice(bookingClass);
+                    }
+                } else {
+                    // For old bookings without price, use current flight price
+                    bookedPrice = flight.getPrice(bookingClass);
+                }
 
-                Booking booking = new Booking(customer, flight, bookingDate, bookingClass, seatNumber);
+                Booking booking = new Booking(customer, flight, bookingDate, bookingClass, seatNumber, bookedPrice);
+
+                // Load cancelled flag (7th field)
+                if (parts.length >= 7 && !parts[6].isEmpty()) {
+                    try {
+                        boolean cancelled = Boolean.parseBoolean(parts[6]);
+                        booking.setCancelled(cancelled);
+                    } catch (Exception ex) {
+                        System.err.println("Warning: Could not parse cancelled flag for booking");
+                    }
+                }
 
                 customer.addBooking(booking);
                 flight.addPassenger(customer);           
@@ -66,13 +90,16 @@ public class BookingDataManager implements DataManager {
         FileWriter fw = new FileWriter(RESOURCE);
         PrintWriter out = new PrintWriter(fw);
 
-        for (Customer customer : fbs.getCustomers()) {
+        // Store all bookings including those from deleted customers
+        for (Customer customer : fbs.getAllCustomers()) {
             for (Booking booking : customer.getBookings()) {
                 out.print(booking.getCustomer().getId() + SEPARATOR);
                 out.print(booking.getFlight().getId() + SEPARATOR);
                 out.print(booking.getBookingDate() + SEPARATOR);
                 out.print(booking.getBookingClass() + SEPARATOR); 
-                out.print(booking.getSeatNumber() == null ? " " : booking.getSeatNumber()); // Save seat
+                out.print((booking.getSeatNumber() == null ? " " : booking.getSeatNumber()) + SEPARATOR);
+                out.print(booking.getBookedPrice() + SEPARATOR);
+                out.print(booking.isCancelled());
                 out.println();
             }
         }

@@ -25,6 +25,16 @@ public class AddBooking implements Command {
         Customer customer = flightBookingSystem.getCustomerByID(customerId);
         Flight flight = flightBookingSystem.getFlightByID(flightId);
         
+        // Prevent booking on deleted flights
+        if (flight.isDeleted()) {
+            throw new FlightBookingSystemException("Cannot book a deleted flight.");
+        }
+        
+        // Prevent booking for deleted customers
+        if (customer.isDeleted()) {
+            throw new FlightBookingSystemException("Cannot create booking for deleted customer.");
+        }
+        
         if (!flight.hasSpace(bookingClass)) {
             throw new FlightBookingSystemException("No space available for " + bookingClass + " class on this flight.");
         }
@@ -79,14 +89,17 @@ public class AddBooking implements Command {
         }
 
         LocalDate bookingDate = flightBookingSystem.getSystemDate();
+        double bookedPrice = flight.getPrice(bookingClass);
+        
         for (String seatNumber : seats) {
-            Booking booking = new Booking(customer, flight, bookingDate, bookingClass, seatNumber);
+            Booking booking = new Booking(customer, flight, bookingDate, bookingClass, seatNumber, bookedPrice);
             customer.addBooking(booking);
             // Important: also add the customer to the flight's passenger list
             flight.addPassenger(customer);
         }
         
         System.out.println("Bookings added successfully for " + bookingClass + " class, Seats: " + String.join(", ", seats));
+        System.out.println("Total Price: NPR " + String.format("%.2f", bookedPrice * seats.length) + " (" + seats.length + " seat(s) x NPR " + String.format("%.2f", bookedPrice) + ")");
     }
     
     private void showSeatMap(Flight flight, BookingClass bookingClass) {

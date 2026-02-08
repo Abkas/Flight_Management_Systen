@@ -35,6 +35,9 @@ public class AddFlightWindow extends JFrame implements ActionListener {
     private JTextField originText = new JTextField();
     private JTextField destinationText = new JTextField();
     private JTextField depDateText = new JTextField();
+    private JTextField economyPriceText = new JTextField();
+    private JTextField businessPriceText = new JTextField();
+    private JTextField firstClassPriceText = new JTextField();
     private JComboBox<Plane> planeCombo;
 
     private JButton addBtn = new JButton("Add");
@@ -52,7 +55,7 @@ public class AddFlightWindow extends JFrame implements ActionListener {
         }
 
         setTitle("Add New Flight");
-        setSize(500, 280);
+        setSize(500, 400);
 
         JPanel contentPanel = new JPanel(new BorderLayout(10, 10));
 
@@ -70,12 +73,18 @@ public class AddFlightWindow extends JFrame implements ActionListener {
         JLabel originLabel = new JLabel("Origin:", SwingConstants.RIGHT);
         JLabel destinationLabel = new JLabel("Destination:", SwingConstants.RIGHT);
         JLabel dateLabel = new JLabel("Departure Date (YYYY-MM-DD):", SwingConstants.RIGHT);
+        JLabel economyPriceLabel = new JLabel("Economy Price (NPR):", SwingConstants.RIGHT);
+        JLabel businessPriceLabel = new JLabel("Business Price (NPR):", SwingConstants.RIGHT);
+        JLabel firstClassPriceLabel = new JLabel("First Class Price (NPR):", SwingConstants.RIGHT);
         JLabel planeLabel = new JLabel("Aircraft:", SwingConstants.RIGHT);
 
         flightNoText.setPreferredSize(new Dimension(220, 26));
         originText.setPreferredSize(new Dimension(220, 26));
         destinationText.setPreferredSize(new Dimension(220, 26));
         depDateText.setPreferredSize(new Dimension(220, 26));
+        economyPriceText.setPreferredSize(new Dimension(220, 26));
+        businessPriceText.setPreferredSize(new Dimension(220, 26));
+        firstClassPriceText.setPreferredSize(new Dimension(220, 26));
 
         gbc.gridx = 0;
         formPanel.add(flightNoLabel, gbc);
@@ -99,6 +108,24 @@ public class AddFlightWindow extends JFrame implements ActionListener {
         formPanel.add(dateLabel, gbc);
         gbc.gridx = 1;
         formPanel.add(depDateText, gbc);
+
+        gbc.gridy++;
+        gbc.gridx = 0;
+        formPanel.add(economyPriceLabel, gbc);
+        gbc.gridx = 1;
+        formPanel.add(economyPriceText, gbc);
+
+        gbc.gridy++;
+        gbc.gridx = 0;
+        formPanel.add(businessPriceLabel, gbc);
+        gbc.gridx = 1;
+        formPanel.add(businessPriceText, gbc);
+
+        gbc.gridy++;
+        gbc.gridx = 0;
+        formPanel.add(firstClassPriceLabel, gbc);
+        gbc.gridx = 1;
+        formPanel.add(firstClassPriceText, gbc);
 
         // Plane selection
         java.util.List<Plane> planes = mw.getFlightBookingSystem().getPlanes();
@@ -163,12 +190,28 @@ public class AddFlightWindow extends JFrame implements ActionListener {
                 throw new FlightBookingSystemException("Date must be in YYYY-MM-DD format");
             }
             
+            double economyPrice = 0.0;
+            double businessPrice = 0.0;
+            double firstClassPrice = 0.0;
+            
+            try {
+                economyPrice = Double.parseDouble(economyPriceText.getText());
+                businessPrice = Double.parseDouble(businessPriceText.getText());
+                firstClassPrice = Double.parseDouble(firstClassPriceText.getText());
+                
+                if (economyPrice < 0 || businessPrice < 0 || firstClassPrice < 0) {
+                    throw new FlightBookingSystemException("Prices must be positive numbers");
+                }
+            } catch (NumberFormatException ex) {
+                throw new FlightBookingSystemException("Please enter valid prices");
+            }
+            
             Plane plane = (Plane) planeCombo.getSelectedItem();
             if (plane == null) {
                 throw new FlightBookingSystemException("Please select an aircraft");
             }
             
-            Command addFlight = new AddFlight(flightNumber, origin, destination, departureDate, plane.getId());
+            Command addFlight = new AddFlight(flightNumber, origin, destination, departureDate, plane.getId(), economyPrice, businessPrice, firstClassPrice);
             addFlight.execute(mw.getFlightBookingSystem());
             
             JOptionPane.showMessageDialog(this, "Flight added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);

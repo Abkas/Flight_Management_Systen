@@ -42,7 +42,44 @@ public class FlightDataManager implements DataManager {
                         }
                     }
                     
-                    Flight flight = new Flight(id, flightNumber, origin, destination, departureDate, plane);
+                    double economyPrice = 0.0;
+                    double businessPrice = 0.0;
+                    double firstClassPrice = 0.0;
+                    
+                    if (properties.length >= 7 && !properties[6].isEmpty()) {
+                        try {
+                            economyPrice = Double.parseDouble(properties[6]);
+                        } catch (NumberFormatException ex) {
+                            System.err.println("Warning: Could not parse economy price for flight " + id);
+                        }
+                    }
+                    if (properties.length >= 8 && !properties[7].isEmpty()) {
+                        try {
+                            businessPrice = Double.parseDouble(properties[7]);
+                        } catch (NumberFormatException ex) {
+                            System.err.println("Warning: Could not parse business price for flight " + id);
+                        }
+                    }
+                    if (properties.length >= 9 && !properties[8].isEmpty()) {
+                        try {
+                            firstClassPrice = Double.parseDouble(properties[8]);
+                        } catch (NumberFormatException ex) {
+                            System.err.println("Warning: Could not parse first class price for flight " + id);
+                        }
+                    }
+                    
+                    Flight flight = new Flight(id, flightNumber, origin, destination, departureDate, plane, economyPrice, businessPrice, firstClassPrice);
+                    
+                    // Load deleted flag (10th field)
+                    if (properties.length >= 10 && !properties[9].isEmpty()) {
+                        try {
+                            boolean deleted = Boolean.parseBoolean(properties[9]);
+                            flight.setDeleted(deleted);
+                        } catch (Exception ex) {
+                            System.err.println("Warning: Could not parse deleted flag for flight " + id);
+                        }
+                    }
+                    
                     fbs.addFlight(flight);
                 } catch (NumberFormatException ex) {
                     throw new FlightBookingSystemException("Unable to parse flight id " + properties[0] + " on line " + line_idx
@@ -56,16 +93,22 @@ public class FlightDataManager implements DataManager {
     @Override
     public void storeData(FlightBookingSystem fbs) throws IOException {
         try (PrintWriter out = new PrintWriter(new FileWriter(RESOURCE))) {
-            for (Flight flight : fbs.getFlights()) {
+            // Store all flights including deleted ones
+            for (Flight flight : fbs.getAllFlights()) {
                 out.print(flight.getId() + SEPARATOR);
                 out.print(flight.getFlightNumber() + SEPARATOR);
                 out.print(flight.getOrigin() + SEPARATOR);
                 out.print(flight.getDestination() + SEPARATOR);
                 out.print(flight.getDepartureDate() + SEPARATOR);
-                // Store plane ID instead of all capacity fields
+                // Store plane ID
                 if (flight.getPlane() != null) {
                     out.print(flight.getPlane().getId());
                 }
+                out.print(SEPARATOR);
+                out.print(flight.getEconomyPrice() + SEPARATOR);
+                out.print(flight.getBusinessPrice() + SEPARATOR);
+                out.print(flight.getFirstClassPrice() + SEPARATOR);
+                out.print(flight.isDeleted());
                 out.println();
             }
         }

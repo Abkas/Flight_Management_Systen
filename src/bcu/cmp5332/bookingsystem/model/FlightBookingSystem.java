@@ -17,6 +17,17 @@ public class FlightBookingSystem {
     }
 
     public List<Flight> getFlights() {
+        List<Flight> out = new ArrayList<>();
+        for (Flight flight : flights.values()) {
+            if (!flight.isDeleted()) {
+                out.add(flight);
+            }
+        }
+        return Collections.unmodifiableList(out);
+    }
+    
+    // Get all flights including deleted ones (for data persistence)
+    public List<Flight> getAllFlights() {
         List<Flight> out = new ArrayList<>(flights.values());
         return Collections.unmodifiableList(out);
     }
@@ -28,6 +39,17 @@ public class FlightBookingSystem {
         return flights.get(id);
     }
     public List<Customer> getCustomers() {
+        List<Customer> out = new ArrayList<>();
+        for (Customer customer : customers.values()) {
+            if (!customer.isDeleted()) {
+                out.add(customer);
+            }
+        }
+        return Collections.unmodifiableList(out);
+    }
+    
+    // Get all customers including deleted ones (for data persistence)
+    public List<Customer> getAllCustomers() {
         List<Customer> out = new ArrayList<>(customers.values());
         return Collections.unmodifiableList(out);
     }
@@ -71,13 +93,12 @@ public class FlightBookingSystem {
         }
         Customer customer = customers.get(customerId);
         
-        // Remove customer from all flights they're booked on
-        for (Booking booking : customer.getBookings()) {
-            Flight flight = booking.getFlight();
-            flight.removePassenger(customer);
+        if (customer.isDeleted()) {
+            throw new FlightBookingSystemException("Customer with ID " + customerId + " is already deleted.");
         }
         
-        customers.remove(customerId);
+        // Soft delete: mark as deleted instead of removing from map
+        customer.setDeleted(true);
     }
 
     public void removeFlight(int flightId) throws FlightBookingSystemException {
@@ -86,20 +107,12 @@ public class FlightBookingSystem {
         }
         Flight flight = flights.get(flightId);
         
-        // Remove all bookings for this flight from customers
-        for (Customer passenger : flight.getPassengers()) {
-            List<Booking> toRemove = new ArrayList<>();
-            for (Booking booking : passenger.getBookings()) {
-                if (booking.getFlight().equals(flight)) {
-                    toRemove.add(booking);
-                }
-            }
-            for (Booking booking : toRemove) {
-                passenger.removeBooking(booking);
-            }
+        if (flight.isDeleted()) {
+            throw new FlightBookingSystemException("Flight with ID " + flightId + " is already deleted.");
         }
         
-        flights.remove(flightId);
+        // Soft delete: mark as deleted instead of removing from map
+        flight.setDeleted(true);
     }
 
     // Plane management methods

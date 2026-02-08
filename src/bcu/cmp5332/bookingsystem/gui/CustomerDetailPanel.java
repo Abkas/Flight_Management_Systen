@@ -213,7 +213,7 @@ public class CustomerDetailPanel extends JPanel {
         bookedLabel.setFont(new Font("Arial", Font.PLAIN, 13));
         bookedLabel.setForeground(new Color(127, 140, 141));
         
-        JLabel classLabel = new JLabel("💺 Class: " + booking.getBookingClass() + " | Seat: " + booking.getSeatNumber());
+        JLabel classLabel = new JLabel("💺 Class: " + booking.getBookingClass() + " | Seat: " + booking.getSeatNumber() + " | Price: NPR " + String.format("%.2f", booking.getBookedPrice()));
         classLabel.setFont(new Font("Arial", Font.PLAIN, 13));
         classLabel.setForeground(new Color(52, 73, 94));
         

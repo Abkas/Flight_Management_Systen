@@ -37,6 +37,17 @@ public class CustomerDataManager implements DataManager {
                 String email = parts.length >= 6 ? parts[5] : "";
                 
                 Customer customer = new Customer(id, name, phone, gender, age, email);
+                
+                // Load deleted flag (7th field)
+                if (parts.length >= 7 && !parts[6].isEmpty()) {
+                    try {
+                        boolean deleted = Boolean.parseBoolean(parts[6]);
+                        customer.setDeleted(deleted);
+                    } catch (Exception ex) {
+                        System.err.println("Warning: Could not parse deleted flag for customer " + id);
+                    }
+                }
+                
                 fbs.addCustomer(customer);
             }
         }
@@ -49,9 +60,11 @@ public class CustomerDataManager implements DataManager {
         FileWriter fw = new FileWriter(RESOURCE);
         PrintWriter out = new PrintWriter(fw);
 
-        for(Customer c: fbs.getCustomers()){
+        // Store all customers including deleted ones
+        for(Customer c: fbs.getAllCustomers()){
             out.print(c.getId() + SEPARATOR + c.getName() + SEPARATOR + c.getPhone() 
-                + SEPARATOR + c.getGender() + SEPARATOR + c.getAge() + SEPARATOR + c.getEmail());
+                + SEPARATOR + c.getGender() + SEPARATOR + c.getAge() + SEPARATOR + c.getEmail()
+                + SEPARATOR + c.isDeleted());
             out.println();
         }
         out.close();

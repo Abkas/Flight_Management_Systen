@@ -16,16 +16,24 @@ public class Flight {
     private String destination;
     private LocalDate departureDate;
     private Plane plane;
+    private double economyPrice;
+    private double businessPrice;
+    private double firstClassPrice;
+    private boolean deleted;
 
     private final Set<Customer> passengers;
 
-    public Flight(int id, String flightNumber, String origin, String destination, LocalDate departureDate, Plane plane) {
+    public Flight(int id, String flightNumber, String origin, String destination, LocalDate departureDate, Plane plane, double economyPrice, double businessPrice, double firstClassPrice) {
         this.id = id;
         this.flightNumber = flightNumber;
         this.origin = origin;
         this.destination = destination;
         this.departureDate = departureDate;
         this.plane = plane;
+        this.economyPrice = economyPrice;
+        this.businessPrice = businessPrice;
+        this.firstClassPrice = firstClassPrice;
+        this.deleted = false;
 
         passengers = new HashSet<>();
     }
@@ -82,6 +90,51 @@ public class Flight {
         this.plane = plane;
     }
 
+    public double getEconomyPrice() {
+        return economyPrice;
+    }
+
+    public void setEconomyPrice(double economyPrice) {
+        this.economyPrice = economyPrice;
+    }
+
+    public double getBusinessPrice() {
+        return businessPrice;
+    }
+
+    public void setBusinessPrice(double businessPrice) {
+        this.businessPrice = businessPrice;
+    }
+
+    public double getFirstClassPrice() {
+        return firstClassPrice;
+    }
+
+    public void setFirstClassPrice(double firstClassPrice) {
+        this.firstClassPrice = firstClassPrice;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public double getPrice(BookingClass bookingClass) {
+        switch (bookingClass) {
+            case ECONOMY:
+                return economyPrice;
+            case BUSINESS:
+                return businessPrice;
+            case FIRST:
+                return firstClassPrice;
+            default:
+                return economyPrice;
+        }
+    }
+
     public int getCapacity(BookingClass _class) {
         if (plane == null) {
             return 0;
@@ -96,7 +149,10 @@ public class Flight {
     public String getDetailsShort() {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/YYYY");
         return "Flight #" + id + " - " + flightNumber + " - " + origin + " to " 
-                + destination + " on " + departureDate.format(dtf);
+                + destination + " on " + departureDate.format(dtf) 
+                + " (Eco: NPR " + String.format("%.2f", economyPrice) 
+                + ", Bus: NPR " + String.format("%.2f", businessPrice)
+                + ", First: NPR " + String.format("%.2f", firstClassPrice) + ")";
     }
 
     public String getDetailsLong() {
@@ -105,7 +161,12 @@ public class Flight {
                        + "Flight No: " + flightNumber + "\n"
                        + "Flight Origin: " + origin + "\n"
                        + "Flight Destination: " + destination + "\n"
-                       + "Flight Departure Date: " + departureDate + "\n";
+                       + "Flight Departure Date: " + departureDate + "\n"
+                       + "Status: " + (deleted ? "DELETED" : "Active") + "\n"
+                       + "Prices:\n"
+                       + "  Economy: NPR " + String.format("%.2f", economyPrice) + "\n"
+                       + "  Business: NPR " + String.format("%.2f", businessPrice) + "\n"
+                       + "  First Class: NPR " + String.format("%.2f", firstClassPrice) + "\n";
         
         if (plane != null) {
             details += "Aircraft: " + plane.getModel() + " (" + plane.getRegistrationNumber() + ")\n"

@@ -18,14 +18,22 @@ public class CancelBooking implements Command {
         Customer customer = flightBookingSystem.getCustomerByID(customerId);
         java.util.List<bcu.cmp5332.bookingsystem.model.Booking> bookings = customer.getBookings();
         
-        if (bookings.isEmpty()) {
-            System.out.println("This customer has no bookings to cancel.");
+        // Filter out cancelled bookings
+        java.util.List<bcu.cmp5332.bookingsystem.model.Booking> activeBookings = new java.util.ArrayList<>();
+        for (bcu.cmp5332.bookingsystem.model.Booking b : bookings) {
+            if (!b.isCancelled()) {
+                activeBookings.add(b);
+            }
+        }
+        
+        if (activeBookings.isEmpty()) {
+            System.out.println("This customer has no active bookings to cancel.");
             return;
         }
         
-        System.out.println("Bookings for Customer #" + customerId + ":");
-        for (int i = 0; i < bookings.size(); i++) {
-             bcu.cmp5332.bookingsystem.model.Booking b = bookings.get(i);
+        System.out.println("Active Bookings for Customer #" + customerId + ":");
+        for (int i = 0; i < activeBookings.size(); i++) {
+             bcu.cmp5332.bookingsystem.model.Booking b = activeBookings.get(i);
              System.out.println((i + 1) + ". Flight: " + b.getFlight().getFlightNumber() + 
                  " (" + b.getFlight().getOrigin() + " - " + b.getFlight().getDestination() + ")" +
                  " | Date: " + b.getBookingDate() + 
@@ -46,7 +54,7 @@ public class CancelBooking implements Command {
                         System.out.println("Cancellation aborted.");
                         return;
                     }
-                    if (index > 0 && index <= bookings.size()) {
+                    if (index > 0 && index <= activeBookings.size()) {
                         break;
                     } else {
                         System.out.println("Invalid number. Please try again.");
@@ -59,22 +67,18 @@ public class CancelBooking implements Command {
              throw new FlightBookingSystemException("Error reading input.");
         }
         
-        bcu.cmp5332.bookingsystem.model.Booking toCancel = bookings.get(index - 1);
+        bcu.cmp5332.bookingsystem.model.Booking toCancel = activeBookings.get(index - 1);
         
-        customer.removeBooking(toCancel);
-        
-        boolean hasOtherBookingsOnFlight = false;
-        for (bcu.cmp5332.bookingsystem.model.Booking b : customer.getBookings()) {
-            if (b.getFlight().equals(toCancel.getFlight()) && !b.equals(toCancel)) {
-                hasOtherBookingsOnFlight = true;
-                break;
-            }
+        // Check if already cancelled
+        if (toCancel.isCancelled()) {
+            System.out.println("This booking is already cancelled.");
+            return;
         }
         
-        if (!hasOtherBookingsOnFlight) {
-            toCancel.getFlight().removePassenger(customer);
-        }
+        // Soft delete: mark as cancelled instead of removing
+        toCancel.setCancelled(true);
         
         System.out.println("Booking cancelled successfully.");
+        System.out.println("Refund of NPR " + toCancel.getBookedPrice() + " will be processed.");
     }
 }

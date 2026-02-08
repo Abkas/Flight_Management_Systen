@@ -14,14 +14,20 @@ public class EditFlight implements Command {
     private final String destination;
     private final LocalDate departureDate;
     private final int planeId;
+    private final double economyPrice;
+    private final double businessPrice;
+    private final double firstClassPrice;
 
-    public EditFlight(int flightId, String flightNumber, String origin, String destination, LocalDate departureDate, int planeId) {
+    public EditFlight(int flightId, String flightNumber, String origin, String destination, LocalDate departureDate, int planeId, double economyPrice, double businessPrice, double firstClassPrice) {
         this.flightId = flightId;
         this.flightNumber = flightNumber;
         this.origin = origin;
         this.destination = destination;
         this.departureDate = departureDate;
         this.planeId = planeId;
+        this.economyPrice = economyPrice;
+        this.businessPrice = businessPrice;
+        this.firstClassPrice = firstClassPrice;
     }
 
     @Override
@@ -47,6 +53,20 @@ public class EditFlight implements Command {
             Plane plane = flightBookingSystem.getPlaneByID(planeId);
             flight.setPlane(plane);
             System.out.println("Flight assigned to plane: " + plane.getModel() + " (" + plane.getRegistrationNumber() + ")");
+        }
+        
+        // Update prices if valid values are provided (>= 0)
+        if (economyPrice >= 0) {
+            flight.setEconomyPrice(economyPrice);
+            System.out.println("Economy price updated to: NPR " + String.format("%.2f", economyPrice));
+        }
+        if (businessPrice >= 0) {
+            flight.setBusinessPrice(businessPrice);
+            System.out.println("Business price updated to: NPR " + String.format("%.2f", businessPrice));
+        }
+        if (firstClassPrice >= 0) {
+            flight.setFirstClassPrice(firstClassPrice);
+            System.out.println("First class price updated to: NPR " + String.format("%.2f", firstClassPrice));
         }
 
         System.out.println("Flight ID:" + flight.getId() + " updated successfully.");

@@ -33,7 +33,8 @@ public class EditBooking implements Command {
                  " (" + b.getFlight().getOrigin() + " - " + b.getFlight().getDestination() + ")" +
                  " | Date: " + b.getBookingDate() + 
                  " | Class: " + b.getBookingClass() + 
-                 " | Seat: " + (b.getSeatNumber() == null ? "N/A" : b.getSeatNumber()));
+                 " | Seat: " + (b.getSeatNumber() == null ? "N/A" : b.getSeatNumber()) +
+                 " | Price: NPR " + String.format("%.2f", b.getBookedPrice()));
         }
         
         // 2. Select Booking
@@ -106,6 +107,21 @@ public class EditBooking implements Command {
             }
             
             // 6. Execute Swap
+            double oldPrice = oldBooking.getBookedPrice();
+            double newPrice = newFlight.getPrice(newClass);
+            double priceDifference = newPrice - oldPrice;
+            
+            // Show price message
+            if (priceDifference > 0) {
+                System.out.println("\n*** PRICE CHANGE: You need to pay additional NPR " + String.format("%.2f", priceDifference) + " ***");
+                System.out.println("(Old price: NPR " + String.format("%.2f", oldPrice) + " -> New price: NPR " + String.format("%.2f", newPrice) + ")");
+            } else if (priceDifference < 0) {
+                System.out.println("\n*** PRICE CHANGE: You will be refunded NPR " + String.format("%.2f", Math.abs(priceDifference)) + " ***");
+                System.out.println("(Old price: NPR " + String.format("%.2f", oldPrice) + " -> New price: NPR " + String.format("%.2f", newPrice) + ")");
+            } else {
+                System.out.println("\nNo price change (NPR " + String.format("%.2f", newPrice) + ")");
+            }
+            
             // Remove old
             customer.removeBooking(oldBooking);
             
@@ -122,7 +138,7 @@ public class EditBooking implements Command {
             }
             
             // Add new
-            Booking newBooking = new Booking(customer, newFlight, flightBookingSystem.getSystemDate(), newClass, newSeat);
+            Booking newBooking = new Booking(customer, newFlight, flightBookingSystem.getSystemDate(), newClass, newSeat, newPrice);
             customer.addBooking(newBooking);
             newFlight.addPassenger(customer);
             

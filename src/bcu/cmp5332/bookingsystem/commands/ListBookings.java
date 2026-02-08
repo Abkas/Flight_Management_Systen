@@ -12,12 +12,15 @@ public class ListBookings implements Command {
         int bookingCount = 0;
         for (Customer customer : flightBookingSystem.getCustomers()) {
             for (Booking booking : customer.getBookings()) {
-                System.out.println("Customer: " + customer.getName() + " (ID: " + customer.getId() + ") " +
-                                   "- Flight: " + booking.getFlight().getFlightNumber() + " (ID: " + booking.getFlight().getId() + ") " +
-                                   "- Date: " + booking.getBookingDate());
-                bookingCount++;
+                // Only show active (non-cancelled) bookings
+                if (!booking.isCancelled()) {
+                    System.out.println("Customer: " + customer.getName() + " (ID: " + customer.getId() + ") " +
+                                       "- Flight: " + booking.getFlight().getFlightNumber() + " (ID: " + booking.getFlight().getId() + ") " +
+                                       "- Date: " + booking.getBookingDate());
+                    bookingCount++;
+                }
             }
         }
-        System.out.println(bookingCount + " booking(s) found.");
+        System.out.println(bookingCount + " active booking(s) found.");
     }
 }

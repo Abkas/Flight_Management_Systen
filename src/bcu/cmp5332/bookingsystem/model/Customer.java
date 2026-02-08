@@ -12,6 +12,7 @@ public class Customer {
     private String gender;
     private int age;
     private String email;
+    private boolean deleted;
     private final List<Booking> bookings = new ArrayList<>();
     
     public Customer(int id, String name, String phone, String gender, int age, String email) {
@@ -21,6 +22,7 @@ public class Customer {
         this.gender = gender;
         this.age = age;
         this.email = email;
+        this.deleted = false;
     }
 
     public int getId(){
@@ -71,6 +73,14 @@ public class Customer {
         this.email = email;
     }
 
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
     public void addBooking(Booking booking) throws FlightBookingSystemException {
         if (bookings.contains(booking)) {
             throw new FlightBookingSystemException("Booking already made.");
@@ -94,9 +104,22 @@ public class Customer {
         sb.append("Gender: ").append(gender).append("\n");
         sb.append("Age: ").append(age).append("\n");
         sb.append("Email: ").append(email).append("\n");
-        sb.append("Number of bookings: ").append(bookings.size()).append("\n");
+        sb.append("Status: ").append(deleted ? "DELETED" : "Active").append("\n");
+        
+        // Count only active bookings
+        int activeBookingCount = 0;
         for (Booking b : bookings) {
-            sb.append("- ").append(b.getFlight().getDetailsShort()).append(", booked on ").append(b.getBookingDate()).append("\n");
+            if (!b.isCancelled()) {
+                activeBookingCount++;
+            }
+        }
+        sb.append("Number of active bookings: ").append(activeBookingCount).append("\n");
+        
+        // Show only non-cancelled bookings
+        for (Booking b : bookings) {
+            if (!b.isCancelled()) {
+                sb.append("- ").append(b.getFlight().getDetailsShort()).append(", booked on ").append(b.getBookingDate()).append("\n");
+            }
         }
         return sb.toString();
     }

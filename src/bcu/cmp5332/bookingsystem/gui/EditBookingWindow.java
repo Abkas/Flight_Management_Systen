@@ -67,7 +67,7 @@ public class EditBookingWindow extends JFrame implements ActionListener {
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 if (value instanceof Booking) {
                     Booking b = (Booking) value;
-                    value = "Flight " + b.getFlight().getFlightNumber() + " | " + b.getBookingClass() + " | Seat " + b.getSeatNumber();
+                    value = "Flight " + b.getFlight().getFlightNumber() + " | " + b.getBookingClass() + " | Seat " + b.getSeatNumber() + " | NPR " + String.format("%.2f", b.getBookedPrice());
                 }
                 return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
             }
@@ -224,6 +224,40 @@ public class EditBookingWindow extends JFrame implements ActionListener {
             }
 
             Flight oldFlight = oldBooking.getFlight();
+            
+            // Calculate price difference
+            double oldPrice = oldBooking.getBookedPrice();
+            double newPrice = newFlight.getPrice(newClass);
+            double priceDifference = newPrice - oldPrice;
+            
+            // Show price change message
+            String priceMessage = "";
+            if (priceDifference > 0) {
+                priceMessage = "Price Change: You need to pay additional NPR " + String.format("%.2f", priceDifference) + "\n" +
+                              "(Old price: NPR " + String.format("%.2f", oldPrice) + " → New price: NPR " + String.format("%.2f", newPrice) + ")\n\n" +
+                              "Do you want to continue?";
+                int confirm = JOptionPane.showConfirmDialog(this, priceMessage, "Additional Payment Required", 
+                                                            JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                if (confirm != JOptionPane.YES_OPTION) {
+                    return;
+                }
+            } else if (priceDifference < 0) {
+                priceMessage = "Price Change: You will be refunded NPR " + String.format("%.2f", Math.abs(priceDifference)) + "\n" +
+                              "(Old price: NPR " + String.format("%.2f", oldPrice) + " → New price: NPR " + String.format("%.2f", newPrice) + ")\n\n" +
+                              "Do you want to continue?";
+                int confirm = JOptionPane.showConfirmDialog(this, priceMessage, "Refund Applicable", 
+                                                            JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                if (confirm != JOptionPane.YES_OPTION) {
+                    return;
+                }
+            } else {
+                // No price change, just confirm
+                int confirm = JOptionPane.showConfirmDialog(this, "No price change. Confirm booking update?", 
+                                                            "Confirm Update", JOptionPane.YES_NO_OPTION);
+                if (confirm != JOptionPane.YES_OPTION) {
+                    return;
+                }
+            }
 
             // Remove old booking
             customer.removeBooking(oldBooking);
@@ -241,7 +275,7 @@ public class EditBookingWindow extends JFrame implements ActionListener {
             // Create new booking
             Booking newBooking = new Booking(customer, newFlight,
                     mw.getFlightBookingSystem().getSystemDate(),
-                    newClass, selectedSeatNumber);
+                    newClass, selectedSeatNumber, newPrice);
             customer.addBooking(newBooking);
             newFlight.addPassenger(customer);
 

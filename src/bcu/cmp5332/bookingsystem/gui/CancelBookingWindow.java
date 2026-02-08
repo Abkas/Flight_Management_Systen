@@ -105,13 +105,18 @@ public class CancelBookingWindow extends JFrame implements ActionListener {
 
         listModel.clear();
         List<Booking> bookings = selectedCustomer.getBookings();
-        if (bookings.isEmpty()) {
+        int activeCount = 0;
+        // Only show non-cancelled bookings
+        for (Booking b : bookings) {
+            if (!b.isCancelled()) {
+                listModel.addElement(b);
+                activeCount++;
+            }
+        }
+        if (activeCount == 0) {
             JOptionPane.showMessageDialog(this, "This customer has no active bookings.", "Notice", JOptionPane.INFORMATION_MESSAGE);
             confirmCancelBtn.setEnabled(false);
         } else {
-            for (Booking b : bookings) {
-                listModel.addElement(b);
-            }
             confirmCancelBtn.setEnabled(true);
         }
     }
@@ -122,27 +127,26 @@ public class CancelBookingWindow extends JFrame implements ActionListener {
             JOptionPane.showMessageDialog(this, "Please select a booking to cancel", "Selection Missing", JOptionPane.WARNING_MESSAGE);
             return;
         }
+        
+        // Check if already cancelled
+        if (toCancel.isCancelled()) {
+            JOptionPane.showMessageDialog(this, "This booking is already cancelled.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
         int response = JOptionPane.showConfirmDialog(this, 
-            "Are you sure you want to cancel booking for Flight " + toCancel.getFlight().getFlightNumber() + "?", 
+            "Are you sure you want to cancel booking for Flight " + toCancel.getFlight().getFlightNumber() + "?\n" +
+            "Refund amount: NPR " + toCancel.getBookedPrice(), 
             "Confirm Cancellation", JOptionPane.YES_NO_OPTION);
             
         if (response == JOptionPane.YES_OPTION) {
             try {
-                selectedCustomer.removeBooking(toCancel);
+                // Soft delete: mark as cancelled instead of removing
+                toCancel.setCancelled(true);
                 
-                boolean hasOtherBookings = false;
-                for (Booking b : selectedCustomer.getBookings()) {
-                    if (b.getFlight().equals(toCancel.getFlight())) {
-                        hasOtherBookings = true;
-                        break;
-                    }
-                }
-                if (!hasOtherBookings) {
-                    toCancel.getFlight().removePassenger(selectedCustomer);
-                }
-                
-                JOptionPane.showMessageDialog(this, "Booking cancelled successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, 
+                    "Booking cancelled successfully.\nRefund of NPR " + toCancel.getBookedPrice() + " will be processed.", 
+                    "Success", JOptionPane.INFORMATION_MESSAGE);
                 loadBookings();
                 mw.refreshBookingsPanel();
             } catch (Exception ex) {
