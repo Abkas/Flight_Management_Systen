@@ -6,6 +6,13 @@ import bcu.cmp5332.bookingsystem.model.FlightBookingSystem;
 
 import java.io.*;
 
+/**
+ * Entry point for the application. This class
+ * loads the system data and runs the text menu
+ * loop until the user types "exit".
+ *
+ * @author Abhis
+ */
 public class Main {
 
     public static void main(String[] args) throws IOException, FlightBookingSystemException {

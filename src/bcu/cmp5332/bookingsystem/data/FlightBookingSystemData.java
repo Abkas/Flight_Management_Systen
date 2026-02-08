@@ -8,6 +8,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * High level helper that uses all DataManager
+ * implementations to load and store the system.
+ *
+ * @author Abhis
+ */
 public class FlightBookingSystemData {
     
     private static final List<DataManager> dataManagers = new ArrayList<>();

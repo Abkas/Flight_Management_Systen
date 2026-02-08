@@ -11,6 +11,12 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+/**
+ * Main Swing window for the flight booking system,
+ * showing the sidebar and all main panels.
+ *
+ * @author Abhis
+ */
 public class MainWindow extends JFrame implements ActionListener {
 
     private FlightBookingSystem fbs;

@@ -2,6 +2,12 @@ package bcu.cmp5332.bookingsystem.commands;
 
 import bcu.cmp5332.bookingsystem.model.FlightBookingSystem;
 
+/**
+ * Command that prints the help message listing
+ * all supported text commands.
+ *
+ * @author Abhis
+ */
 public class Help implements Command {
 
     @Override

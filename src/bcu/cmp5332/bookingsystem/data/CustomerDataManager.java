@@ -10,6 +10,12 @@ import bcu.cmp5332.bookingsystem.model.Customer;
 
 import java.io.IOException;
 
+/**
+ * Data manager that loads and stores customer
+ * records from the customers.txt file.
+ *
+ * @author Abhis
+ */
 public class CustomerDataManager implements DataManager {
 
     private final String RESOURCE = "./resources/data/customers.txt";

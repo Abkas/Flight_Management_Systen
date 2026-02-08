@@ -5,6 +5,12 @@ import bcu.cmp5332.bookingsystem.model.Booking;
 import bcu.cmp5332.bookingsystem.model.Customer;
 import bcu.cmp5332.bookingsystem.model.FlightBookingSystem;
 
+/**
+ * Command that lists all active (non-cancelled)
+ * bookings grouped by customer.
+ *
+ * @author Abhis
+ */
 public class ListBookings implements Command {
 
     @Override

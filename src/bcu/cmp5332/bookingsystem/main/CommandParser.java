@@ -8,6 +8,13 @@ import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
+/**
+ * Parses user input strings into Command objects
+ * and performs basic validation of numbers, dates
+ * and booking class.
+ *
+ * @author Abhis
+ */
 public class CommandParser {
     
     public static Command parse(String line) throws IOException, FlightBookingSystemException {

@@ -6,10 +6,21 @@ import bcu.cmp5332.bookingsystem.model.Customer;
 import bcu.cmp5332.bookingsystem.model.Flight;
 import bcu.cmp5332.bookingsystem.model.FlightBookingSystem;
 
+/**
+ * Command that shows all bookings for a given
+ * customer, including flight, class and seat.
+ *
+ * @author Abhis
+ */
 public class ShowBooking implements Command {
 
     private final int customerId;
 
+    /**
+     * Creates a new ShowBooking command.
+     *
+     * @param customerId the id of the customer
+     */
     public ShowBooking(int customerId) {
         this.customerId = customerId;
     }

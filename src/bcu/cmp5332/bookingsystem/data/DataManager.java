@@ -4,6 +4,13 @@ import bcu.cmp5332.bookingsystem.main.FlightBookingSystemException;
 import bcu.cmp5332.bookingsystem.model.FlightBookingSystem;
 import java.io.IOException;
 
+/**
+ * Interface for classes that know how to load and
+ * store a specific part of the FlightBookingSystem
+ * to and from text files.
+ *
+ * @author Abhis
+ */
 public interface DataManager {
     
     public static final String SEPARATOR = "::";

@@ -13,6 +13,12 @@ import java.io.PrintWriter;
 import java.util.Scanner;
 import java.time.LocalDate;
 
+/**
+ * Data manager that loads and stores booking
+ * information from the bookings.txt file.
+ *
+ * @author Abhis
+ */
 public class BookingDataManager implements DataManager {
     
     public final String RESOURCE = "./resources/data/bookings.txt";

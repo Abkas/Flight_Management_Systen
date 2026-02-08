@@ -11,6 +11,12 @@ import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.util.Scanner;
 
+/**
+ * Data manager that loads and stores flights
+ * from the flights.txt file.
+ *
+ * @author Abhis
+ */
 public class FlightDataManager implements DataManager {
     
     private final String RESOURCE = "./resources/data/flights.txt";

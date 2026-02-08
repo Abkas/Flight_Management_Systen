@@ -1,9 +1,10 @@
 package bcu.cmp5332.bookingsystem.main;
 
 /**
- * FlightBookingSystemException extends {@link Exception} class and is a custom exception
- * that is used to notify the user about errors or invalid commands.
- * 
+ * Custom checked exception used across the system
+ * to report validation errors and invalid commands.
+ *
+ * @author Abhis
  */
 public class FlightBookingSystemException extends Exception {
 

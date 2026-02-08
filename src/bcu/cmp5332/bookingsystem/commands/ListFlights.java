@@ -6,6 +6,12 @@ import bcu.cmp5332.bookingsystem.model.FlightBookingSystem;
 
 import java.util.List;
 
+/**
+ * Command that prints a short summary line for
+ * every flight in the system.
+ *
+ * @author Abhis
+ */
 public class ListFlights implements Command {
 
     @Override
